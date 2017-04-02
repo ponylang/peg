@@ -3,10 +3,8 @@ primitive JsonParser
     let obj = Forward
     let array = Forward
 
-    let digit19 =
-      L("1") / L("2") / L("3") / L("4") / L("5") /
-      L("6") / L("7") / L("8") / L("9")
-    let digit = L("0") / digit19
+    let digit19 = R('1', '9')
+    let digit = R('0', '9')
     let digits = digit.many1()
     let int =
       (L("-") * digit19 * digits) /
@@ -17,17 +15,11 @@ primitive JsonParser
     let exp = (L("e") / L("E")) * (L("+") / L("-")).opt() * digits
     let number = (int * frac.opt() * exp.opt()).term()
 
-    let hex =
-      digit /
-      L("a") / L("b") / L("c") / L("d") / L("e") / L("f") /
-      L("A") / L("B") / L("C") / L("D") / L("E") / L("F")
-
+    let hex = digit / R('a', 'f') / R('A', 'F')
     let char =
       L("\\\"") / L("\\\\") / L("\\/") / L("\\b") / L("\\f") / L("\\n") /
       L("\\r") / L("\\t") / (L("\\u") * hex * hex * hex * hex) /
-      (not L("\"") * not L("\\") * Character)
-      // TODO: exclude control characters?
-      // TODO: rewrite Character as a range?
+      (not L("\"") * not L("\\") * R(' '))
 
     // TODO: labels
     // TODO: get the shape of the parse tree right
@@ -43,11 +35,11 @@ primitive JsonParser
     array() = L("[").skip() * elements * L("]").skip()
 
     let whitespace = (L(" ") / L("\t") / L("\r") / L("\n")).many1()
-    let linecomment = (L("//") * (not L("\r") * not L("\n") * Character).many())
+    let linecomment = (L("//") * (not L("\r") * not L("\n") * Unicode).many())
     let nestedcomment = Forward
     nestedcomment() =
       L("/*") *
-      ((not L("/*") * not L("*/") * Character) / nestedcomment).many() *
+      ((not L("/*") * not L("*/") * Unicode) / nestedcomment).many() *
       L("*/")
     let hidden = (whitespace / linecomment / nestedcomment).many()
 
