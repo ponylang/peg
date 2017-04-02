@@ -8,7 +8,6 @@ actor Main
     // TODO: Restart: ability to record errors then skip ahead to some token
     // to continue parsing from there
     // TODO: reorder AST nodes after parsing a Sequence?
-    // TODO: check for hidden+EOF when finishing a parse
 
     try
       with file = OpenFile(

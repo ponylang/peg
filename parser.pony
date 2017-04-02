@@ -60,6 +60,7 @@ trait box Parser
   fun op_not(): Not => Not(this)
   fun hide(that: Parser): Hidden => Hidden(this, that)
   fun term(l: Label = NoLabel): Terminal => Terminal(this, l)
+  fun eof(): EndOfFile => EndOfFile(this)
 
 primitive NoParser is Parser
   fun parse(source: String, offset: USize, tree: Bool, hidden: Parser)

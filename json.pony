@@ -37,7 +37,7 @@ primitive JsonParser
         L("*/")
       let hidden = (whitespace / linecomment / nestedcomment).many()
 
-      value.hide(hidden)
+      value.eof().hide(hidden)
     end
 
 primitive TObject is Label fun text(): String => "Object"
