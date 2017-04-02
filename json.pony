@@ -20,7 +20,6 @@ primitive JsonParser
         L("\\r") / L("\\t") / (L("\\u") * hex * hex * hex * hex) /
         (not L("\"") * not L("\\") * R(' '))
 
-      // TODO: pair label not working
       let string = (L("\"") * char.many() * L("\"")).term(TString)
       let value =
         L("null").term(TNull) / L("true").term(TBool) / L("false").term(TBool) /
