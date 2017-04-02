@@ -9,13 +9,7 @@ class val AST
   fun ref push(some: (AST | Token | NotPresent)) =>
     children.push(some)
 
-  fun print(out: OutStream) =>
-    out.print("(")
-    for p in children.values() do
-      match p
-      | let ast: AST => ast.print(out)
-      | let token: Token => token.print(out)
-      | let none: NotPresent => out.print("x")
-      end
-    end
-    out.print(")")
+  fun size(): USize => children.size()
+
+  fun extract(): (AST | Token | NotPresent) =>
+    try children(0) else NotPresent end

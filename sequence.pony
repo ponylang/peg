@@ -37,7 +37,12 @@ class box Sequence is Parser
       end
     end
 
-    (length, consume ast)
+    match ast.size()
+    | 0 => (length, Skipped)
+    | 1 => (length, ast.extract())
+    else
+      (length, consume ast)
+    end
 
   fun _parse_token(source: String, offset: USize): ParseResult =>
     var length = USize(0)

@@ -16,9 +16,6 @@ class val Token
     offset = offset'
     length = length'
 
-  fun print(out: OutStream) =>
-    out.print(source.substring(offset.isize(), (offset + length).isize()))
-
   fun position(): (USize, USize) =>
     var cr = false
     var line = USize(1)

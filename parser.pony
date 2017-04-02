@@ -29,8 +29,8 @@ primitive ParseFail
   """
 
 trait box Parser
-  fun parse(source: String, offset: USize, tree: Bool, hidden: Parser)
-    : ParseResult
+  fun parse(source: String, offset: USize = 0, tree: Bool = true,
+    hidden: Parser = NoParser): ParseResult
 
   fun skip_hidden(source: String, offset: USize, hidden: Parser): USize =>
     """

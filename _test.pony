@@ -14,10 +14,11 @@ actor Main
         FilePath(env.root as AmbientAuth, env.args(1))) as File
       do
         let source: String = file.read_string(file.size())
-        (let adv, let r) = p.parse(source, 0, true, NoParser)
+        (let adv, let r) = recover val p.parse(source) end
         match r
-        | let ast: AST => ast.print(env.out)
-        | let token: Token => token.print(env.out)
+        | let r': (AST | Token | NotPresent) =>
+          let s = recover val Printer(r') end
+          env.out.print(s)
         | ParseFail => env.out.print("Parse fail")
         end
       end
