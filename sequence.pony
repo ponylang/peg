@@ -22,34 +22,34 @@ class box Sequence is Parser
     end
 
   fun _parse_tree(source: String, offset: USize, hidden: Parser): ParseResult =>
-    var offset' = offset
+    var length = USize(0)
     let ast = AST
 
     for p in _seq.values() do
-      match p.parse(source, offset', true, hidden)
-      | (let offset'': USize, Skipped) =>
-        offset' = offset''
-      | (let offset'': USize, let r: (AST | Token | NotPresent)) =>
+      match p.parse(source, offset + length, true, hidden)
+      | (let advance: USize, Skipped) =>
+        length = length + advance
+      | (let advance: USize, let r: (AST | Token | NotPresent)) =>
         ast.push(r)
-        offset' = offset''
+        length = length + advance
       else
         return (0, ParseFail)
       end
     end
 
-    (offset', consume ast)
+    (length, consume ast)
 
   fun _parse_token(source: String, offset: USize): ParseResult =>
-    var offset' = offset
+    var length = USize(0)
 
     for p in _seq.values() do
-      match p.parse(source, offset', false, NoParser)
+      match p.parse(source, offset + length, false, NoParser)
       | (0, NotPresent)
       | (0, Skipped) => None
-      | (let offset'': USize, Lex) => offset' = offset''
+      | (let advance: USize, Lex) => length = length + advance
       else
         return (0, ParseFail)
       end
     end
 
-    (offset', Lex)
+    (length, Lex)

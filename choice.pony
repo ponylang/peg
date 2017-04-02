@@ -22,7 +22,7 @@ class box Choice is Parser
   =>
     for p in _seq.values() do
       match p.parse(source, offset, tree, hidden)
-      | (let offset': USize, let r: ParseOK) => return (offset', r)
+      | (let advance: USize, let r: ParseOK) => return (advance, r)
       end
     end
     (0, ParseFail)

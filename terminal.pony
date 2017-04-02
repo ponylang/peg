@@ -12,11 +12,11 @@ class box Terminal is Parser
   fun parse(source: String, offset: USize, tree: Bool, hidden: Parser)
     : ParseResult
   =>
-    let offset' = skip_hidden(source, offset, hidden)
+    let from = skip_hidden(source, offset, hidden)
 
-    match _a.parse(source, offset', false, NoParser)
+    match _a.parse(source, from, false, NoParser)
     | (let length: USize, Lex) =>
-      result(source, offset', length, tree)
+      result(source, offset, from, length, tree)
     else
       (0, ParseFail)
     end

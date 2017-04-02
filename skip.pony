@@ -8,7 +8,7 @@ class box Skip is Parser
     : ParseResult
   =>
     match _a.parse(source, offset, false, hidden)
-    | (let offset': USize, let r: ParseOK) => (offset', Skipped)
+    | (let advance: USize, let r: ParseOK) => (advance, Skipped)
     else
       (0, ParseFail)
     end

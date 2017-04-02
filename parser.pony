@@ -36,19 +36,19 @@ trait box Parser
     """
     Return a new start location, skipping over hidden tokens.
     """
-    hidden.parse(source, offset, false, NoParser)._1
+    offset + hidden.parse(source, offset, false, NoParser)._1
 
-  fun result(source: String, offset: USize, length: USize, tree: Bool)
-    : ParseResult
+  fun result(source: String, offset: USize, from: USize, length: USize,
+    tree: Bool): ParseResult
   =>
     """
     Once a terminal parser has an offset and length, it should call `result` to
     return either a token (if a tree is requested) or a new lexical position.
     """
     if tree then
-      (offset + length, Token(NoLabel, source, offset, length))
+      ((from - offset) + length, Token(NoLabel, source, from, length))
     else
-      (offset + length, Lex)
+      ((from - offset) + length, Lex)
     end
 
   // TODO: accept strings, turn them into literals

@@ -8,7 +8,7 @@ class box Option is Parser
     : ParseResult
   =>
     match _a.parse(source, offset, tree, hidden)
-    | (let offset': USize, let r: ParseOK) => (offset', r)
+    | (let advance: USize, let r: ParseOK) => (advance, r)
     else
-      (offset, NotPresent)
+      (0, NotPresent)
     end

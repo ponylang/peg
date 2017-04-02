@@ -45,9 +45,4 @@ primitive JsonParser
     array() = L("[").skip() * elements * L("]").skip()
 
     let whitespace = (L(" ") / L("\t") / L("\r") / L("\n")).many1()
-
-    // TODO: array stack overflow
-    // TODO: object fails
-
-    // TODO: whitespace not working
     value.hide(whitespace)
