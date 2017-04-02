@@ -1,12 +1,18 @@
-class box Many is Parser
+class Many is Parser
   let _a: Parser
   let _sep: Parser
+  var _label: Label
   let _require: Bool
 
-  new box create(a: Parser, sep: Parser, require: Bool) =>
+  new create(a: Parser, sep: Parser, require: Bool) =>
     _a = a
     _sep = sep
+    _label = NoLabel
     _require = require
+
+  fun ref label(l: Label): Many =>
+    _label = l
+    this
 
   fun parse(source: String, offset: USize, tree: Bool, hidden: Parser)
     : ParseResult
@@ -19,7 +25,7 @@ class box Many is Parser
 
   fun _parse_tree(source: String, offset: USize, hidden: Parser): ParseResult =>
     var length = USize(0)
-    let ast = AST
+    let ast = AST(_label)
 
     while true do
       match _a.parse(source, offset + length, true, hidden)

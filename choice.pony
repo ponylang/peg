@@ -1,4 +1,4 @@
-class box Choice is Parser
+class Choice is Parser
   """
   Given a sequence of parser rules, return the result of the first rule that
   matches. Note that the result is deterministic: if more than one of the rules
@@ -6,10 +6,10 @@ class box Choice is Parser
   """
   let _seq: Array[Parser]
 
-  new box create(a: Parser, b: Parser) =>
+  new create(a: Parser, b: Parser) =>
     _seq = [a; b]
 
-  new box concat(a: Choice, b: Parser) =>
+  new concat(a: Choice box, b: Parser) =>
     let r = a._seq.clone()
     r.push(b)
     _seq = consume r

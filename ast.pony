@@ -1,10 +1,9 @@
 class val AST
-  // let label: Label
+  let label: Label
   embed children: Array[(AST | Token | NotPresent)] = children.create()
 
-  new iso create(/*label': Label*/) =>
-    // label = label'
-    None
+  new iso create(label': Label = NoLabel) =>
+    label = label'
 
   fun ref push(some: (AST | Token | NotPresent)) =>
     children.push(some)

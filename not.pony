@@ -1,10 +1,10 @@
-class box Not is Parser
+class Not is Parser
   """
   If the parse succeeds, then fail. Otherwise, return a zero length Skipped.
   """
   let _a: Parser
 
-  new box create(a: Parser) =>
+  new create(a: Parser) =>
     _a = a
 
   fun parse(source: String, offset: USize, tree: Bool, hidden: Parser)

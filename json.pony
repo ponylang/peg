@@ -12,7 +12,7 @@ primitive JsonParser
         (digit19 * digits) / (digit)
       let frac = L(".") * digits
       let exp = (L("e") / L("E")) * (L("+") / L("-")).opt() * digits
-      let number = (int * frac.opt() * exp.opt()).term()
+      let number = (int * frac.opt() * exp.opt()).term(TNumber)
 
       let hex = digit / R('a', 'f') / R('A', 'F')
       let char =
@@ -20,13 +20,14 @@ primitive JsonParser
         L("\\r") / L("\\t") / (L("\\u") * hex * hex * hex * hex) /
         (not L("\"") * not L("\\") * R(' '))
 
-      // TODO: labels
-      let string = (L("\"") * char.many() * L("\"")).term()
+      // TODO: pair label not working
+      let string = (L("\"") * char.many() * L("\"")).term(TString)
       let value =
-        L("null") / L("true") / L("false") / number / string / obj / array
-      let pair = string * L(":").skip() * value
-      obj() = L("{").skip() * pair.many(L(",")) * L("}").skip()
-      array() = L("[").skip() * value.many(L(",")) * L("]").skip()
+        L("null").term(TNull) / L("true").term(TBool) / L("false").term(TBool) /
+        number / string / obj / array
+      let pair = (string * L(":").skip() * value).label(TPair)
+      obj() = L("{").skip() * pair.many(L(",")).label(TObject) * L("}").skip()
+      array() = L("[").skip() * value.many(L(",")).label(TArray) * L("]").skip()
 
       let whitespace = (L(" ") / L("\t") / L("\r") / L("\n")).many1()
       let linecomment = L("//") * (not L("\r") * not L("\n") * Unicode).many()
@@ -39,3 +40,11 @@ primitive JsonParser
 
       value.hide(hidden)
     end
+
+primitive TObject is Label fun text(): String => "Object"
+primitive TPair is Label fun text(): String => "Pair"
+primitive TArray is Label fun text(): String => "Array"
+primitive TString is Label fun text(): String => "String"
+primitive TNumber is Label fun text(): String => "Number"
+primitive TBool is Label fun text(): String => "Bool"
+primitive TNull is Label fun text(): String => "Null"

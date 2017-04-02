@@ -1,13 +1,20 @@
-class box Sequence is Parser
+class Sequence is Parser
   let _seq: Array[Parser]
+  var _label: Label
 
-  new box create(a: Parser, b: Parser) =>
+  new create(a: Parser, b: Parser, l: Label = NoLabel) =>
     _seq = [a; b]
+    _label = l
 
-  new box concat(a: Sequence, b: Parser) =>
+  new concat(a: Sequence box, b: Parser) =>
     let r = a._seq.clone()
     r.push(b)
     _seq = consume r
+    _label = a._label
+
+  fun ref label(l: Label): Sequence =>
+    _label = l
+    this
 
   fun mul(that: Parser): Sequence =>
     concat(this, that)
@@ -23,7 +30,7 @@ class box Sequence is Parser
 
   fun _parse_tree(source: String, offset: USize, hidden: Parser): ParseResult =>
     var length = USize(0)
-    let ast = AST
+    let ast = AST(_label)
 
     for p in _seq.values() do
       match p.parse(source, offset + length, true, hidden)

@@ -1,4 +1,4 @@
-class box Forward is Parser
+class Forward is Parser
   """
   A forwarding parser is used to create mutually recursive parse rules. The
   forwarding parser can be used instead, and is updated when the real parse

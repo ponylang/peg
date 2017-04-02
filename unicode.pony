@@ -13,7 +13,7 @@ primitive Unicode is Parser
 
 type R is UnicodeRange
 
-class box UnicodeRange is Parser
+class UnicodeRange is Parser
   let _low: U32
   let _hi: U32
 

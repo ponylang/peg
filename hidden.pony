@@ -1,4 +1,4 @@
-class box Hidden is Parser
+class Hidden is Parser
   """
   A hidden channel is used to specify whitespace, comments, and any other
   lexical tokens that should be discarded from the input stream. This replaces
@@ -7,7 +7,7 @@ class box Hidden is Parser
   let _a: Parser
   let _hide: Parser
 
-  new box create(a: Parser, hide: Parser) =>
+  new create(a: Parser, hide: Parser) =>
     _a = a
     _hide = hide
 

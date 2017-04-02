@@ -1,7 +1,7 @@
-class box Skip is Parser
+class Skip is Parser
   let _a: Parser
 
-  new box create(a: Parser) =>
+  new create(a: Parser) =>
     _a = a
 
   fun parse(source: String, offset: USize, tree: Bool, hidden: Parser)

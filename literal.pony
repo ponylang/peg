@@ -1,6 +1,6 @@
 type L is Literal
 
-class box Literal is Parser
+class Literal is Parser
   let _text: String
 
   new val create(from: String) =>
