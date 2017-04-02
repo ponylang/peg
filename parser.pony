@@ -51,13 +51,12 @@ trait box Parser
       ((from - offset) + length, Lex)
     end
 
-  // TODO: accept strings, turn them into literals
   fun mul(that: Parser): Sequence => Sequence(this, that)
   fun div(that: Parser): Choice => Choice(this, that)
   fun skip(): Skip => Skip(this)
   fun opt(): Option => Option(this)
-  fun many(): Many => Many(this, false)
-  fun many1(): Many => Many(this, true)
+  fun many(sep: Parser = NoParser): Many => Many(this, sep, false)
+  fun many1(sep: Parser = NoParser): Many => Many(this, sep, true)
   fun op_not(): Not => Not(this)
   fun hide(that: Parser): Hidden => Hidden(this, that)
   fun term(): Terminal => Terminal(this)

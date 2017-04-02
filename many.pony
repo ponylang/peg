@@ -1,9 +1,11 @@
 class box Many is Parser
   let _a: Parser
+  let _sep: Parser
   let _require: Bool
 
-  new box create(a: Parser, require: Bool) =>
+  new box create(a: Parser, sep: Parser, require: Bool) =>
     _a = a
+    _sep = sep
     _require = require
 
   fun parse(source: String, offset: USize, tree: Bool, hidden: Parser)
@@ -29,6 +31,13 @@ class box Many is Parser
       else
         break
       end
+
+      match _sep.parse(source, offset + length, true, hidden)
+      | (let advance: USize, let r: ParseOK) =>
+        length = length + advance
+      else
+        break
+      end
     end
 
     if _require and (length == 0) then
@@ -45,6 +54,13 @@ class box Many is Parser
       | (0, NotPresent)
       | (0, Skipped) => None
       | (let advance: USize, Lex) =>
+        length = length + advance
+      else
+        break
+      end
+
+      match _sep.parse(source, offset + length, false, NoParser)
+      | (let advance: USize, let r: ParseOK) =>
         length = length + advance
       else
         break
