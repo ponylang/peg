@@ -1,5 +1,3 @@
-use "collections" // TODO: we pick up Range from a trait, and then need this
-
 primitive JsonParser
   fun apply(): Parser =>
     let obj = Forward
@@ -45,4 +43,12 @@ primitive JsonParser
     array() = L("[").skip() * elements * L("]").skip()
 
     let whitespace = (L(" ") / L("\t") / L("\r") / L("\n")).many1()
-    value.hide(whitespace)
+    let linecomment = (L("//") * (not L("\r") * not L("\n") * Character).many())
+    let nestedcomment = Forward
+    nestedcomment() =
+      L("/*") *
+      ((not L("/*") * not L("*/") * Character) / nestedcomment).many() *
+      L("*/")
+    let hidden = (whitespace / linecomment / nestedcomment).many()
+
+    value.hide(hidden)
