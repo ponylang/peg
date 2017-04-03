@@ -4,15 +4,11 @@ class Many is Parser
   var _label: Label
   let _require: Bool
 
-  new create(a: Parser, sep: Parser, require: Bool) =>
+  new create(a: Parser, sep: Parser, l: Label, require: Bool) =>
     _a = a
     _sep = sep
-    _label = NoLabel
-    _require = require
-
-  fun ref label(l: Label): Many =>
     _label = l
-    this
+    _require = require
 
   fun parse(source: String, offset: USize, tree: Bool, hidden: Parser)
     : ParseResult

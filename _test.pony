@@ -2,7 +2,7 @@ use "files"
 
 actor Main
   new create(env: Env) =>
-    let p = JsonParser()
+    let p = JsonParser().eof()
 
     // TODO: Errors should be based on the longest successful match
     // TODO: Restart: ability to record errors then skip ahead to some token
@@ -14,7 +14,7 @@ actor Main
         FilePath(env.root as AmbientAuth, env.args(1))) as File
       do
         let source: String = file.read_string(file.size())
-        (let adv, let r) = recover val p.parse(source) end
+        (let adv, let r) = p.parse(source)
         match r
         | let r': (AST | Token | NotPresent) =>
           let s = recover val Printer(r') end

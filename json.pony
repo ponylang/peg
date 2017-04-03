@@ -24,9 +24,9 @@ primitive JsonParser
       let value =
         L("null").term(TNull) / L("true").term(TBool) / L("false").term(TBool) /
         number / string / obj / array
-      let pair = (string * L(":").skip() * value).label(TPair)
-      obj() = L("{").skip() * pair.many(L(",")).label(TObject) * L("}").skip()
-      array() = L("[").skip() * value.many(L(",")).label(TArray) * L("]").skip()
+      let pair = string * L(":").skip() * (value, TPair)
+      obj() = L("{").skip() * pair.many(L(","), TObject) * L("}").skip()
+      array() = L("[").skip() * value.many(L(","), TArray) * L("]").skip()
 
       let whitespace = (L(" ") / L("\t") / L("\r") / L("\n")).many1()
       let linecomment = L("//") * (not L("\r") * not L("\n") * Unicode).many()
@@ -37,7 +37,7 @@ primitive JsonParser
         L("*/")
       let hidden = (whitespace / linecomment / nestedcomment).many()
 
-      value.eof().hide(hidden)
+      value.hide(hidden)
     end
 
 primitive TObject is Label fun text(): String => "Object"

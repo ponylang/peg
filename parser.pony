@@ -51,16 +51,19 @@ trait box Parser
       ((from - offset) + length, Lex)
     end
 
-  fun mul(that: Parser): Sequence => Sequence(this, that)
-  fun div(that: Parser): Choice => Choice(this, that)
-  fun skip(): Skip => Skip(this)
-  fun opt(): Option => Option(this)
-  fun many(sep: Parser = NoParser): Many => Many(this, sep, false)
-  fun many1(sep: Parser = NoParser): Many => Many(this, sep, true)
-  fun op_not(): Not => Not(this)
-  fun hide(that: Parser): Hidden => Hidden(this, that)
-  fun term(l: Label = NoLabel): Terminal => Terminal(this, l)
-  fun eof(): EndOfFile => EndOfFile(this)
+  fun mul(that: Parser, l: Label = NoLabel): Parser => Sequence(this, that, l)
+  fun div(that: Parser): Parser => Choice(this, that)
+  fun skip(): Parser => Skip(this)
+  fun opt(): Parser => Option(this)
+  fun many(sep: Parser = NoParser, l: Label = NoLabel): Parser =>
+    Many(this, sep, l, false)
+  fun many1(sep: Parser = NoParser, l: Label = NoLabel): Parser =>
+    Many(this, sep, l, true)
+  fun op_not(): Parser => Not(this)
+  fun op_and(): Parser => Not(Not(this))
+  fun hide(that: Parser): Parser => Hidden(this, that)
+  fun term(l: Label = NoLabel): Parser => Terminal(this, l)
+  fun eof(): Parser => EndOfFile(this)
 
 primitive NoParser is Parser
   fun parse(source: String, offset: USize, tree: Bool, hidden: Parser)

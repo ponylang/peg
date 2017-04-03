@@ -6,18 +6,14 @@ class Sequence is Parser
     _seq = [a; b]
     _label = l
 
-  new concat(a: Sequence box, b: Parser) =>
+  new concat(a: Sequence box, b: Parser, l: Label = NoLabel) =>
     let r = a._seq.clone()
     r.push(b)
     _seq = consume r
-    _label = a._label
+    _label = if l is NoLabel then a._label else l end
 
-  fun ref label(l: Label): Sequence =>
-    _label = l
-    this
-
-  fun mul(that: Parser): Sequence =>
-    concat(this, that)
+  fun mul(that: Parser, l: Label = NoLabel): Sequence =>
+    concat(this, that, l)
 
   fun parse(source: String, offset: USize, tree: Bool, hidden: Parser)
     : ParseResult
