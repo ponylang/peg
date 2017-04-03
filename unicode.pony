@@ -11,6 +11,8 @@ primitive Unicode is Parser
     end
     (from - offset, this)
 
+  fun error_msg(): String => "unicode character"
+
 type R is UnicodeRange
 
 class UnicodeRange is Parser
@@ -32,3 +34,12 @@ class UnicodeRange is Parser
       end
     end
     (from - offset, this)
+
+  fun error_msg(): String =>
+    recover
+      String
+        .> append("unicode character between ")
+        .> push_utf32(_low)
+        .> append(" and ")
+        .> push_utf32(_hi)
+    end

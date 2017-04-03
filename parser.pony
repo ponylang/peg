@@ -27,6 +27,8 @@ trait box Parser
   fun parse(source: String, offset: USize = 0, tree: Bool = true,
     hidden: Parser = NoParser): ParseResult
 
+  fun error_msg(): String => ""
+
   fun skip_hidden(source: String, offset: USize, hidden: Parser): USize =>
     """
     Return a new start location, skipping over hidden tokens.

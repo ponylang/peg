@@ -20,3 +20,5 @@ class Forward is Parser
     else
       (0, this)
     end
+
+  fun error_msg(): String => "incomplete forward declaration"

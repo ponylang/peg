@@ -1,5 +1,4 @@
 use "files"
-use "term"
 
 actor Main
   new create(env: Env) =>
@@ -20,25 +19,11 @@ actor Main
         FilePath(env.root as AmbientAuth, filename)) as File
       do
         let source: String = file.read_string(file.size())
-        (let adv, let r) = p.parse(source)
-        match r
-        | let r': (AST | Token | NotPresent) =>
-          let s = recover val Printer(r') end
-          env.out.print(s)
-        | let r': Parser =>
-          (let line, let col) = Position(source, adv)
-          env.out.writev(
-            recover
-              [ ANSI.red()
-                filename
-                ":"
-                line.string()
-                ":"
-                col.string()
-                "\n"
-                ANSI.reset()
-              ]
-            end)
+        match p.parse(source)
+        | (_, let r: (AST | Token | NotPresent)) =>
+          env.out.print(recover val Printer(r) end)
+        | (let offset: USize, let r: Parser) =>
+          env.out.writev(Error(filename, source, offset, r))
         end
       end
     else

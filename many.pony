@@ -31,12 +31,6 @@ class Many is Parser
       | (let advance: USize, let r: (AST | Token | NotPresent)) =>
         ast.push(r)
         length = length + advance
-      | (let advance: USize, let r: Parser) => 
-        if trailing then
-          return (length + advance, r)
-        else
-          break
-        end
       else
         break
       end
@@ -71,12 +65,6 @@ class Many is Parser
       | (0, Skipped) => None
       | (let advance: USize, Lex) =>
         length = length + advance
-      | (let advance: USize, let r: Parser) => 
-        if trailing then
-          return (length + advance, r)
-        else
-          break
-        end
       else
         break
       end
@@ -99,4 +87,16 @@ class Many is Parser
       (length, this)
     else
       (length, Lex)
+    end
+
+  fun error_msg(): String =>
+    recover
+      let s = String
+      if _require then s.append("at least one ") end
+      s.append("element")
+      if _sep isnt NoParser then
+        s.append(" without a trailing ")
+        s.append(_sep.error_msg())
+      end
+      s
     end

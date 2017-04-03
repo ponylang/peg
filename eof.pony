@@ -19,3 +19,5 @@ class EndOfFile is Parser
     else
       (0, this)
     end
+
+  fun error_msg(): String => "end-of-file"

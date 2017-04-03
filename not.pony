@@ -15,3 +15,5 @@ class Not is Parser
     else
       (0, Skipped)
     end
+
+  fun error_msg(): String => "not to find " + _a.error_msg()

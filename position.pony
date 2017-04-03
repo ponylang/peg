@@ -28,3 +28,10 @@ primitive Position
     end
 
     (line, col)
+
+  fun source_line(source: String, offset: USize, line: USize, col: USize)
+    : String
+  =>
+    let start = ((offset - col) + 1).isize()
+    let finish = try source.find("\n", start) else source.size().isize() end
+    source.substring(start, finish)

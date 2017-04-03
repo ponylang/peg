@@ -16,3 +16,5 @@ class Literal is Parser
     else
       (from - offset, this)
     end
+
+  fun error_msg(): String => _text
