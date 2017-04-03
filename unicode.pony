@@ -9,7 +9,7 @@ primitive Unicode is Parser
         return result(source, offset, from, length.usize(), tree)
       end
     end
-    (0, ParseFail)
+    (from - offset, this)
 
 type R is UnicodeRange
 
@@ -31,4 +31,4 @@ class UnicodeRange is Parser
         return result(source, offset, from, length.usize(), tree)
       end
     end
-    (0, ParseFail)
+    (from - offset, this)

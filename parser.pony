@@ -1,4 +1,4 @@
-type ParseResult is (USize, (ParseOK | ParseFail))
+type ParseResult is (USize, (ParseOK | Parser))
 
 type ParseOK is
   ( AST
@@ -21,11 +21,6 @@ primitive Skipped
 primitive Lex
   """
   Returned when a parse tree isn't neeeded
-  """
-
-primitive ParseFail
-  """
-  Returned when the parse isn't found.
   """
 
 trait box Parser

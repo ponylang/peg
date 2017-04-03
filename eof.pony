@@ -11,7 +11,11 @@ class EndOfFile is Parser
     | (let advance: USize, let r: ParseOK) =>
       let from = skip_hidden(source, offset + advance, hidden)
       if from == source.size() then
-        return (from - offset, r)
+        (from - offset, r)
+      else
+        (from - offset, this)
       end
+    | (let advance: USize, let r: Parser) => (advance, r)
+    else
+      (0, this)
     end
-    (0, ParseFail)

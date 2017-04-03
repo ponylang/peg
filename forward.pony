@@ -18,5 +18,5 @@ class Forward is Parser
     try
       (_a as Parser).parse(source, offset, tree, hidden)
     else
-      (0, ParseFail)
+      (0, this)
     end

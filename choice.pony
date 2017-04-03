@@ -20,9 +20,15 @@ class Choice is Parser
   fun parse(source: String, offset: USize, tree: Bool, hidden: Parser)
     : ParseResult
   =>
+    var fail: (USize, Parser) = (0, NoParser)
+
     for p in _seq.values() do
       match p.parse(source, offset, tree, hidden)
       | (let advance: USize, let r: ParseOK) => return (advance, r)
+      | (let advance: USize, let r: Parser) =>
+        if advance > fail._1 then
+          fail = (advance, r)
+        end
       end
     end
-    (0, ParseFail)
+    fail

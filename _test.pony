@@ -8,10 +8,15 @@ actor Main
     // TODO: Restart: ability to record errors then skip ahead to some token
     // to continue parsing from there
     // TODO: reorder AST nodes after parsing a Sequence?
+    // TODO: attach lambdas to rules?
+    // TODO: write a PEG parser parser
+    // TODO: keywords have to make sure they aren't followed by an identifier character
 
     try
+      let filename = env.args(1)
+
       with file = OpenFile(
-        FilePath(env.root as AmbientAuth, env.args(1))) as File
+        FilePath(env.root as AmbientAuth, filename)) as File
       do
         let source: String = file.read_string(file.size())
         (let adv, let r) = p.parse(source)
@@ -19,7 +24,20 @@ actor Main
         | let r': (AST | Token | NotPresent) =>
           let s = recover val Printer(r') end
           env.out.print(s)
-        | ParseFail => env.out.print("Parse fail")
+        | let r': Parser =>
+          (let line, let col) = Position(source, adv)
+          env.out.writev(
+            recover
+              [ filename
+                ":"
+                line.string()
+                ":"
+                col.string()
+                ":"
+                adv.string()
+                "\n"
+              ]
+            end)
         end
       end
     else

@@ -35,8 +35,9 @@ class Sequence is Parser
       | (let advance: USize, let r: (AST | Token | NotPresent)) =>
         ast.push(r)
         length = length + advance
+      | (let advance: USize, let r: Parser) => return (length + advance, r)
       else
-        return (0, ParseFail)
+        return (length, this)
       end
     end
 
@@ -55,8 +56,9 @@ class Sequence is Parser
       | (0, NotPresent)
       | (0, Skipped) => None
       | (let advance: USize, Lex) => length = length + advance
+      | (let advance: USize, let r: Parser) => return (length + advance, r)
       else
-        return (0, ParseFail)
+        return (length, this)
       end
     end
 
