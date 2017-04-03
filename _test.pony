@@ -1,4 +1,5 @@
 use "files"
+use "term"
 
 actor Main
   new create(env: Env) =>
@@ -28,14 +29,14 @@ actor Main
           (let line, let col) = Position(source, adv)
           env.out.writev(
             recover
-              [ filename
+              [ ANSI.red()
+                filename
                 ":"
                 line.string()
                 ":"
                 col.string()
-                ":"
-                adv.string()
                 "\n"
+                ANSI.reset()
               ]
             end)
         end

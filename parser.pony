@@ -48,7 +48,7 @@ trait box Parser
 
   fun mul(that: Parser, l: Label = NoLabel): Parser => Sequence(this, that, l)
   fun div(that: Parser): Parser => Choice(this, that)
-  fun skip(): Parser => Skip(this)
+  fun neg(): Parser => Skip(this)
   fun opt(): Parser => Option(this)
   fun many(sep: Parser = NoParser, l: Label = NoLabel): Parser =>
     Many(this, sep, l, false)

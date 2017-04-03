@@ -11,8 +11,7 @@ class Not is Parser
     : ParseResult
   =>
     match _a.parse(source, offset, tree, hidden)
-    | (let advance: USize, let r: ParseOK) =>
-      (0, this)
+    | (let advance: USize, let r: ParseOK) => (advance, this)
     else
       (0, Skipped)
     end
