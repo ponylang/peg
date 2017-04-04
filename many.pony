@@ -31,6 +31,12 @@ class Many is Parser
       | (let advance: USize, let r: (AST | Token | NotPresent)) =>
         ast.push(r)
         length = length + advance
+      | (let advance: USize, let r: Parser) =>
+        if trailing and (advance > 0) then
+          return (length + advance, r)
+        else
+          break
+        end
       else
         break
       end
@@ -65,6 +71,12 @@ class Many is Parser
       | (0, Skipped) => None
       | (let advance: USize, Lex) =>
         length = length + advance
+      | (let advance: USize, let r: Parser) =>
+        if trailing and (advance > 0) then
+          return (length + advance, r)
+        else
+          break
+        end
       else
         break
       end
