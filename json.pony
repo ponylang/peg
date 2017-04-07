@@ -9,7 +9,7 @@ primitive JsonParser
       let digits = digit.many1()
       let int =
         (L("-") * digit19 * digits) / (L("-") * digit) /
-        (digit19 * digits) / (digit)
+        (digit19 * digits) / digit
       let frac = L(".") * digits
       let exp = (L("e") / L("E")) * (L("+") / L("-")).opt() * digits
       let number = (int * frac.opt() * exp.opt()).term(TNumber)

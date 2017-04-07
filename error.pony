@@ -3,7 +3,7 @@ use "collections"
 
 primitive Error
   fun apply(filename: String, source: String, offset: USize, parser: Parser)
-    : Array[String] val
+    : ByteSeqIter
   =>
     (let line, let col) = Position(source, offset)
     let s = Position.source_line(source, offset, line, col)
@@ -23,7 +23,7 @@ primitive Error
       end
 
     recover
-      [ ANSI.red()
+      [ ANSI.green()
         "-- SYNTAX ERROR -- "
         filename
         ":"

@@ -28,7 +28,7 @@ class Many is Parser
       match _a.parse(source, offset + length, true, hidden)
       | (let advance: USize, Skipped) =>
         length = length + advance
-      | (let advance: USize, let r: (AST | Token | NotPresent)) =>
+      | (let advance: USize, let r: ASTChild) =>
         ast.push(r)
         length = length + advance
       | (let advance: USize, let r: Parser) =>

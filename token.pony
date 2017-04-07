@@ -1,12 +1,23 @@
 class val Token
-  let label: Label
+  let _label: Label
   let source: String
   let offset: USize
   let length: USize
 
   new val create(label': Label, source': String, offset': USize, length': USize)
   =>
-    label = label'
+    _label = label'
     source = source'
     offset = offset'
     length = length'
+
+  fun label(): Label => _label
+
+  fun string(): String iso^ =>
+    source.substring(offset.isize(), (offset + length).isize())
+
+  fun substring(from: ISize, to: ISize): String iso^ =>
+    source.substring(offset_to_index(from).isize(), offset_to_index(to).isize())
+
+  fun offset_to_index(i: ISize): USize =>
+    if i < 0 then offset + length + i.usize() else offset + i.usize() end

@@ -12,6 +12,7 @@ primitive NotPresent
   """
   Returned by Option when the parse isn't found
   """
+  fun label(): Label => NoLabel
 
 primitive Skipped
   """
@@ -27,7 +28,7 @@ trait box Parser
   fun parse(source: String, offset: USize = 0, tree: Bool = true,
     hidden: Parser = NoParser): ParseResult
 
-  fun error_msg(): String => ""
+  fun error_msg(): String => "not to see an error in this parser"
 
   fun skip_hidden(source: String, offset: USize, hidden: Parser): USize =>
     """
@@ -68,8 +69,9 @@ primitive NoParser is Parser
   =>
     (0, Lex)
 
+  fun error_msg(): String => "not to be using NoParser"
+
 trait val Label
-  new val create()
   fun text(): String
 
 primitive NoLabel is Label fun text(): String => ""

@@ -5,11 +5,11 @@ class Terminal is Parser
   elements.
   """
   let _a: Parser
-  let _l: Label
+  let _label: Label
 
   new create(a: Parser, l: Label = NoLabel) =>
     _a = a
-    _l = l
+    _label = l
 
   fun parse(source: String, offset: USize, tree: Bool, hidden: Parser)
     : ParseResult
@@ -18,7 +18,7 @@ class Terminal is Parser
 
     match _a.parse(source, from, false, NoParser)
     | (let length: USize, Lex) =>
-      result(source, offset, from, length, tree, _l)
+      result(source, offset, from, length, tree, _label)
     | (let advance: USize, let r: Parser) => (advance, r)
     else
       (0, this)

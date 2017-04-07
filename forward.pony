@@ -4,7 +4,7 @@ class Forward is Parser
   forwarding parser can be used instead, and is updated when the real parse
   rule is created.
   """
-  var _a: (Parser | None) = None
+  var _a: Parser = NoParser
 
   new create() =>
     None
@@ -15,10 +15,12 @@ class Forward is Parser
   fun parse(source: String, offset: USize, tree: Bool, hidden: Parser)
     : ParseResult
   =>
-    try
-      (_a as Parser).parse(source, offset, tree, hidden)
+    if _a isnt NoParser then
+      _a.parse(source, offset, tree, hidden)
     else
       (0, this)
     end
+
+  fun complete(): Bool => _a isnt NoParser
 
   fun error_msg(): String => "incomplete forward declaration"

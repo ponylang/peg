@@ -32,7 +32,7 @@ class Sequence is Parser
       match p.parse(source, offset + length, true, hidden)
       | (let advance: USize, Skipped) =>
         length = length + advance
-      | (let advance: USize, let r: (AST | Token | NotPresent)) =>
+      | (let advance: USize, let r: ASTChild) =>
         ast.push(r)
         length = length + advance
       | (let advance: USize, let r: Parser) => return (length + advance, r)
@@ -43,7 +43,7 @@ class Sequence is Parser
 
     match ast.size()
     | 0 => (length, Skipped)
-    | 1 => (length, ast.extract())
+    | 1 if _label is NoLabel => (length, ast.extract())
     else
       (length, consume ast)
     end

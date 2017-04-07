@@ -1,31 +1,25 @@
 use "collections"
 
 primitive Printer
-  fun apply(p: (AST box | Token box | NotPresent), depth: USize = 0,
-    indent: String = "  ", s: String ref = String): String ref
+  fun apply(p: ASTChild, depth: USize = 0, indent: String = "  ",
+    s: String ref = String): String ref
   =>
+    _indent(depth, indent, s)
+    s.append("(")
+    s.append(p.label().text())
+
     match p
-    | let ast: AST box =>
-      _indent(depth, indent, s)
-      s.append("(")
-      s.append(ast.label.text())
+    | let ast: AST =>
       s.append("\n")
       for child in ast.children.values() do
         Printer(child, depth + 1, indent, s)
       end
       _indent(depth, indent, s)
-      s.append(")\n")
-    | let token: Token box =>
-      _indent(depth, indent, s)
-      s.append("(")
-      s.append(token.label.text())
+    | let token: Token =>
       s.append(" ")
       s.append(token.source, token.offset, token.length)
-      s.append(")\n")
-    | NotPresent =>
-      _indent(depth, indent, s)
-      s.append("()\n")
     end
+    s.append(")\n")
     s
 
   fun _indent(depth: USize, indent: String, s: String ref) =>
