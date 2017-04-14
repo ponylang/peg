@@ -24,9 +24,9 @@ primitive JsonParser
       let value =
         L("null").term(TNull) / L("true").term(TBool) / L("false").term(TBool) /
         number / string / obj / array
-      let pair = string * -L(":") * (value, TPair)
-      obj() = -L("{") * pair.many(L(","), TObject) * -L("}")
-      array() = -L("[") * value.many(L(","), TArray) * -L("]")
+      let pair = (string * -L(":") * value).node(TPair)
+      obj() = -L("{") * pair.many(L(",")).node(TObject) * -L("}")
+      array() = -L("[") * value.many(L(",")).node(TArray) * -L("]")
 
       let whitespace = (L(" ") / L("\t") / L("\r") / L("\n")).many1()
       let linecomment = L("//") * (not L("\r") * not L("\n") * Unicode).many()

@@ -5,18 +5,15 @@ type Errors is ReadSeq[ByteSeqIter box] box
 type ErrorAccum is Array[ByteSeqIter box]
 
 primitive PegCompiler
-  """
-  TODO: separator nodes to get AST shape right
-  TODO: labels on Many, Many1 and Sequence
-  """
   fun apply(source: String): (Parser | Errors) =>
-    match PegParser().eof().parse(source)
+    let p: Parser = PegParser().eof()
+    match p.parse(source)
     | (_, let ast: AST) =>
       _compile_grammar(ast)
     | (let offset: USize, let r: Parser) =>
       [ Error("...", source, offset, r) ]
     else
-      [["Unreachable parse result"]]
+      [["Unreachable parse result\n"]]
     end
 
   fun _compile_grammar(ast: AST): (Parser | Errors) =>
@@ -31,7 +28,7 @@ primitive PegCompiler
     for (rule, def) in defs.pairs() do
       if not def.complete() then
         // TODO: emit error for undefined rule
-        errors.push(["Undefined rule " + rule])
+        errors.push(["Undefined rule "; rule; "\n"])
       end
     end
 
@@ -59,15 +56,23 @@ primitive PegCompiler
         if (c >= 'A') and (c <= 'Z') then
           p() = rule.term(PegLabel(ident))
         else
-          p() = rule
+          p() =
+            match rule
+            | let rule': Sequence => rule'.node(PegLabel(ident))
+            | let rule': Many => rule'.node(PegLabel(ident))
+            else
+              rule
+            end
         end
       else
         // TODO: emit error for double definition
-        errors.push(["Double definition of " + ident])
+        errors.push(["Double definition of "; ident; "\n"])
       end
     end
 
-  fun _compile_expr(errors: ErrorAccum, defs: Defs, node: ASTChild): Parser =>
+  fun _compile_expr(errors: ErrorAccum, defs: Defs, node: ASTChild)
+    : (Parser ref | NoParser)
+  =>
     try
       match node.label()
       | PegChoice =>
@@ -94,6 +99,14 @@ primitive PegCompiler
         _compile_expr(errors, defs, (node as AST).children(0)).many1()
       | PegMany =>
         _compile_expr(errors, defs, (node as AST).children(0)).many()
+      | PegSep1 =>
+        let ast = node as AST
+        let sep = _compile_expr(errors, defs, ast.children(1))
+        _compile_expr(errors, defs, ast.children(0)).many1(sep)
+      | PegSep =>
+        let ast = node as AST
+        let sep = _compile_expr(errors, defs, ast.children(1))
+        _compile_expr(errors, defs, ast.children(0)).many(sep)
       | PegOpt =>
         _compile_expr(errors, defs, (node as AST).children(0)).opt()
       | PegRange =>
@@ -112,11 +125,11 @@ primitive PegCompiler
         let text = _unescape(node as Token)
         L(text).term(PegLabel(text))
       else
-        errors.push(["Unknown node label "; node.label().text()])
+        errors.push(["Unknown node label "; node.label().text(); "\n"])
         NoParser
       end
     else
-      errors.push(["Unknown error"])
+      errors.push(["Unknown error\n"])
       NoParser
     end
 

@@ -19,30 +19,37 @@ primitive PegParser
       let ident_start = R('a', 'z') / R('A', 'Z') / L("_")
       let ident_cont = ident_start / R('0', '9')
       let ident = (ident_start * ident_cont.many()).term(PegIdent)
-      let range = charlit * -L("..") * (charlit, PegRange)
+      let range = (charlit * -L("..") * charlit).node(PegRange)
 
       let expr = Forward
       let group = -L("(") * expr * -L(")")
       let primary =
         (ident * not L("<-")) / group / range / string / charlit / dot
       let suffix =
-        (primary * (-L("?"), PegOpt)) /
-        (primary * (-L("*"), PegMany)) /
-        (primary * (-L("+"), PegMany1)) /
+        (primary * -L("?")).node(PegOpt) /
+        (primary * -L("*")).node(PegMany) /
+        (primary * -L("+")).node(PegMany1) /
+        (primary * -L("%+") * primary).node(PegSep1) /
+        (primary * -L("%") * primary).node(PegSep) /
         primary
       let prefix =
-        (-L("&") * (suffix, PegAnd)) /
-        (-L("!") * (suffix, PegNot)) /
-        (-L("-") * (suffix, PegSkip)) /
+        (-L("&") * suffix).node(PegAnd) /
+        (-L("!") * suffix).node(PegNot) /
+        (-L("-") * suffix).node(PegSkip) /
         suffix
-      let sequence = prefix.many1(NoParser, PegSeq)
-      expr() = sequence.many1(L("/"), PegChoice)
-      let definition = ident * -L("<-") * (expr, PegDef)
+      let sequence = prefix.many1().node(PegSeq)
+      expr() = sequence.many1(L("/")).node(PegChoice)
+      let definition = (ident * -L("<-") * expr).node(PegDef)
 
       let whitespace = (L(" ") / L("\t") / L("\r") / L("\n")).many1()
-      let linecomment = L("#") * (not L("\r") * not L("\n") * Unicode).many()      
-      let hidden = (whitespace / linecomment).many()
-      definition.many1(NoParser, PegGrammar).hide(hidden)
+      let linecomment = L("//") * (not L("\r") * not L("\n") * Unicode).many()
+      let nestedcomment = Forward
+      nestedcomment() =
+        L("/*") *
+        ((not L("/*") * not L("*/") * Unicode) / nestedcomment).many() *
+        L("*/")
+      let hidden = (whitespace / linecomment / nestedcomment).many()
+      definition.many1().node(PegGrammar).hide(hidden)
     end
 
 primitive PegString is Label fun text(): String => "String"
@@ -53,6 +60,8 @@ primitive PegRange is Label fun text(): String => "Range"
 primitive PegOpt is Label fun text(): String => "Opt"
 primitive PegMany is Label fun text(): String => "Many"
 primitive PegMany1 is Label fun text(): String => "Many1"
+primitive PegSep is Label fun text(): String => "Sep"
+primitive PegSep1 is Label fun text(): String => "Sep1"
 primitive PegAnd is Label fun text(): String => "And"
 primitive PegNot is Label fun text(): String => "Not"
 primitive PegSkip is Label fun text(): String => "Skip"

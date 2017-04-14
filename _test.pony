@@ -54,10 +54,10 @@ actor Main
 
         match recover val PegCompiler(peg) end
         | let p: Parser val =>
-          peg_run(p, source_filename, auth, env.out)          
+          peg_run(p, source_filename, auth, env.out)
         | let errors: Errors val =>
           for e in errors.values() do
-            env.out.printv(e)
+            env.out.writev(e)
           end
         end
       end

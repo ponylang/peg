@@ -1,28 +1,26 @@
-digit19 <- '1'..'9'
-digit <- '0'..'9'
-digits <- digit+
-int <- '-' digit19 digits / '-' digit / digit19 digits / digit
-frac <- '.' digits
-exp <- ('e' / 'E') ('-' / '+')? digits
-Number <- int frac? exp?
+DIGIT19 <- '1'..'9'
+DIGIT <- '0'..'9'
+DIGITS <- DIGIT+
+INT <- '-' DIGIT19 DIGITS / '-' DIGIT / DIGIT19 DIGITS / DIGIT
+FRAC <- '.' DIGITS
+EXP <- ('e' / 'E') ('-' / '+')? DIGITS
+NUMBER <- INT FRAC? EXP?
 
-hex <- digit / 'a'..'f' / 'A'..'F'
-char <-
+HEX <- DIGIT / 'a'..'f' / 'A'..'F'
+CHAR <-
   "\\\"" / "\\\\" / "\\/" / "\\b" / "\\f" / "\\n" / "\\r" / "\\t" /
-  "\\u" hex hex hex hex / !"\"" !"\\" .
-String <- "\"" char* "\""
-Bool <- "true" / "false"
+  "\\u" HEX HEX HEX HEX / !"\"" !"\\" .
+STRING <- "\"" CHAR* "\""
+BOOL <- "true" / "false"
 
-value <- "null" / Bool / Number / String / object / array
-pair <- String -":" value
+value <- "null" / BOOL / NUMBER / STRING / object / array
+pair <- STRING -':' value
 
-# TODO: separator nodes to get AST shape right
-# TODO: labels
-object <- -"{" (pair (-"," pair)*)? -"}"
-array <- -"[" (value (-"," value)*)? -"]"
+object <- -'{' (pair % ',') -'}'
+array <- -'[' (value % ',') -']'
 
-whitespace <- (" " / "\t" / "\r" / "\n")+
-linecomment <- "//" (!"\r" !"\n" .)*
+whitespace <- (' ' / '\t' / '\r' / '\n')+
+linecomment <- "//" (!'\r' !'\n' .)*
 nestedcomment <- "/*" ((!"/*" !"*/" .) / nestedcomment)* "*/"
 
 start <- value

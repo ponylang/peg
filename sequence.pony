@@ -2,18 +2,21 @@ class Sequence is Parser
   let _seq: Array[Parser]
   var _label: Label
 
-  new create(a: Parser, b: Parser, l: Label = NoLabel) =>
+  new create(a: Parser, b: Parser) =>
     _seq = [a; b]
-    _label = l
+    _label = NoLabel
 
-  new concat(a: Sequence box, b: Parser, l: Label = NoLabel) =>
+  new concat(a: Sequence box, b: Parser) =>
     let r = a._seq.clone()
     r.push(b)
     _seq = consume r
-    _label = if l is NoLabel then a._label else l end
+    _label = a._label
 
-  fun mul(that: Parser, l: Label = NoLabel): Sequence =>
-    concat(this, that, l)
+  fun label(): Label => _label
+  fun ref node(value: Label): Sequence => _label = value; this
+
+  fun mul(that: Parser): Sequence =>
+    concat(this, that)
 
   fun parse(source: String, offset: USize, tree: Bool, hidden: Parser)
     : ParseResult
@@ -32,8 +35,19 @@ class Sequence is Parser
       match p.parse(source, offset + length, true, hidden)
       | (let advance: USize, Skipped) =>
         length = length + advance
-      | (let advance: USize, let r: ASTChild) =>
+      | (let advance: USize, let r: (Token | NotPresent)) =>
         ast.push(r)
+        length = length + advance
+      | (let advance: USize, let r: AST) =>
+        match p
+        | let p': (Sequence box | Many box) if p'.label() is NoLabel =>
+          for child in r.children.values() do
+            ast.push(child)
+          end
+        else
+          ast.push(r)
+        end
+
         length = length + advance
       | (let advance: USize, let r: Parser) => return (length + advance, r)
       else
@@ -42,7 +56,7 @@ class Sequence is Parser
     end
 
     match ast.size()
-    | 0 => (length, Skipped)
+    | 0 if _label is NoLabel => (length, Skipped)
     | 1 if _label is NoLabel => (length, ast.extract())
     else
       (length, consume ast)
