@@ -1,57 +1,95 @@
+use "term"
 use "collections"
 
-type Defs is Map[String, Forward]
+type Defs is Map[String, (Forward, Token)]
 type Errors is ReadSeq[ByteSeqIter box] box
-type ErrorAccum is Array[ByteSeqIter box]
+
+class ErrorAccum
+  let filename: String
+  let source: String
+  let errors: Array[ByteSeqIter box] = errors.create()
+
+  new create(filename': String, source': String) =>
+    filename = filename'
+    source = source'
+
+  fun size(): USize => errors.size()
+
+  fun ref apply(offset: USize, category: String, msg: String) =>
+    push(Error(filename, source, offset, category, msg))
+
+  fun ref general(category: String, msg: String) =>
+    push(Error.general(filename, source, category, msg))
+
+  fun ref push(e: ByteSeqIter box) =>
+    errors.push(e)
 
 primitive PegCompiler
-  fun apply(source: String): (Parser | Errors) =>
+  fun apply(filename: String, source: String): (Parser | Errors) =>
     let p: Parser = PegParser().eof()
     match p.parse(source)
     | (_, let ast: AST) =>
-      _compile_grammar(ast)
+      let errors = ErrorAccum(filename, source)
+      let r = _compile_grammar(errors, ast)
+      if errors.size() > 0 then
+        errors.errors
+      else
+        r
+      end
     | (let offset: USize, let r: Parser) =>
-      [ Error("...", source, offset, r) ]
+      [ Error(filename, source, offset, "SYNTAX", r.error_msg()) ]
     else
       [["Unreachable parse result\n"]]
     end
 
-  fun _compile_grammar(ast: AST): (Parser | Errors) =>
+  fun _compile_grammar(errors: ErrorAccum, ast: AST): Parser =>
     let defs = Defs
-    let errors = ErrorAccum
-    defs("start") = Forward
+
+    for node in ast.children.values() do
+      try _forward_definition(errors, defs, node as AST) end
+    end
 
     for node in ast.children.values() do
       try _compile_definition(errors, defs, node as AST) end
     end
 
-    for (rule, def) in defs.pairs() do
-      if not def.complete() then
-        // TODO: emit error for undefined rule
-        errors.push(["Undefined rule "; rule; "\n"])
-      end
+    if not defs.contains("start") then
+      errors.general("DEFINITION", "grammar has no start rule")
     end
 
     if errors.size() == 0 then
       try
-        var start: Parser = defs("start")
+        (var start: Parser, _) = defs("start")
         if defs.contains("hidden") then
-          start = start.hide(defs("hidden"))
+          start = start.hide(defs("hidden")._1)
         end
         return start
       end
     end
 
-    errors
+    NoParser
+
+  fun _forward_definition(errors: ErrorAccum, defs: Defs, ast: AST) =>
+    try
+      let token = ast.children(0) as Token
+      let ident: String = token.string()
+
+      if defs.contains(ident) then
+        (_, let prev) = defs(ident)
+        errors(token.offset, "DEFINITION", "repeated rule")
+        errors(prev.offset, "DEFINITION", "previously defined here")
+      else
+        defs(ident) = (Forward, token)
+      end
+    end
 
   fun _compile_definition(errors: ErrorAccum, defs: Defs, ast: AST) =>
     try
       let ident: String = (ast.children(0) as Token).string()
-      let expr = ast.children(1)
-      let p = defs.insert_if_absent(ident, Forward)
+      let rule = _compile_expr(errors, defs, ast.children(1))
+      (let p, _) = defs(ident)
 
       if not p.complete() then
-        let rule = _compile_expr(errors, defs, expr)
         let c = ident(0)
         if (c >= 'A') and (c <= 'Z') then
           p() = rule.term(PegLabel(ident))
@@ -64,9 +102,6 @@ primitive PegCompiler
               rule
             end
         end
-      else
-        // TODO: emit error for double definition
-        errors.push(["Double definition of "; ident; "\n"])
       end
     end
 
@@ -115,7 +150,18 @@ primitive PegCompiler
         let b = _unescape(ast.children(1) as Token).utf32(0)._1
         R(a, b)
       | PegIdent =>
-        defs.insert_if_absent((node as Token).string(), Forward)
+        let token = node as Token
+        let ident: String = token.string()
+        if not defs.contains(ident) then
+          errors(token.offset, "DEFINITION",
+            recover
+              String.>append("no such rule '").>append(ident).>append("'")
+            end
+            )
+          NoParser
+        else
+          defs(ident)._1
+        end
       | PegAny =>
         R(' ')
       | PegChar =>
@@ -125,7 +171,7 @@ primitive PegCompiler
         let text = _unescape(node as Token)
         L(text).term(PegLabel(text))
       else
-        errors.push(["Unknown node label "; node.label().text(); "\n"])
+        errors.push(["Unknown node label '"; node.label().text(); "'\n"])
         NoParser
       end
     else

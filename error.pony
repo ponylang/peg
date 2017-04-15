@@ -2,8 +2,8 @@ use "term"
 use "collections"
 
 primitive Error
-  fun apply(filename: String, source: String, offset: USize, parser: Parser)
-    : ByteSeqIter
+  fun apply(filename: String, source: String, offset: USize, category: String,
+    msg: String): ByteSeqIter
   =>
     (let line, let col) = Position(source, offset)
     let s = Position.source_line(source, offset, line, col)
@@ -24,21 +24,28 @@ primitive Error
 
     recover
       [ ANSI.green()
-        "-- SYNTAX ERROR -- "
-        filename
-        ":"
-        line.string()
-        ":"
-        col.string()
+        "-- "; category; " ERROR -- "
+        filename; ":"; line.string(); ":"; col.string()
         ANSI.reset()
         "\n\n"
         s
         "\n"
         ANSI.red()
-        s2
-        "^ expected "
-        parser.error_msg()
+        s2; "^ "; msg; "\n\n"
+        ANSI.reset()
+      ]
+    end
+
+  fun general(filename: String, source: String, category: String, msg: String)
+    : ByteSeqIter
+  =>
+    recover
+      [ ANSI.green()
+        "-- "; category; " ERROR --"
         ANSI.reset()
         "\n\n"
+        ANSI.red()
+        msg; "\n\n"
+        ANSI.reset()
       ]
     end

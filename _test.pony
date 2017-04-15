@@ -2,12 +2,6 @@ use "files"
 
 actor Main
   new create(env: Env) =>
-    // TODO: Restart: ability to record errors then skip ahead to some token
-    // to continue parsing from there
-    // TODO: reorder AST nodes after parsing a Sequence?
-    // TODO: attach lambdas to rules?
-    // TODO: keywords have to make sure they aren't followed by an identifier character
-
     try
       if env.args.size() >= 3 then
         peg_compiler(env)
@@ -30,7 +24,7 @@ actor Main
         | (_, let r: ASTChild) =>
           out.print(recover val Printer(r) end)
         | (let offset: USize, let r: Parser) =>
-          out.writev(Error(filename, source, offset, r))
+          out.writev(Error(filename, source, offset, "SYNTAX", r.error_msg()))
         end
       end
     else
@@ -52,7 +46,7 @@ actor Main
       do
         let peg: String = peg_file.read_string(peg_file.size())
 
-        match recover val PegCompiler(peg) end
+        match recover val PegCompiler(peg_filename, peg) end
         | let p: Parser val =>
           peg_run(p, source_filename, auth, env.out)
         | let errors: Errors val =>

@@ -17,4 +17,4 @@ class Literal is Parser
       (from - offset, this)
     end
 
-  fun error_msg(): String => _text
+  fun error_msg(): String => "expected " + _text

@@ -20,4 +20,4 @@ class EndOfFile is Parser
       (0, this)
     end
 
-  fun error_msg(): String => "end-of-file"
+  fun error_msg(): String => "expected end-of-file"

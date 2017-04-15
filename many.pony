@@ -105,7 +105,7 @@ class Many is Parser
 
   fun error_msg(): String =>
     recover
-      let s = String
+      let s = String.>append("expected ")
       if _require then s.append("at least one ") end
       s.append("element")
       if _sep isnt NoParser then
