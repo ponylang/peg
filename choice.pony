@@ -17,7 +17,7 @@ class Choice is Parser
   fun div(that: Parser): Choice =>
     concat(this, that)
 
-  fun parse(source: String, offset: USize, tree: Bool, hidden: Parser)
+  fun parse(source: Source, offset: USize, tree: Bool, hidden: Parser)
     : ParseResult
   =>
     var fail: (USize, Parser) = (0, NoParser)

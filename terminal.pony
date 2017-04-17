@@ -11,7 +11,7 @@ class Terminal is Parser
     _a = a
     _label = l
 
-  fun parse(source: String, offset: USize, tree: Bool, hidden: Parser)
+  fun parse(source: Source, offset: USize, tree: Bool, hidden: Parser)
     : ParseResult
   =>
     let from = skip_hidden(source, offset, hidden)

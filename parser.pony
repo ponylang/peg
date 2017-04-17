@@ -25,18 +25,18 @@ primitive Lex
   """
 
 trait box Parser
-  fun parse(source: String, offset: USize = 0, tree: Bool = true,
+  fun parse(source: Source, offset: USize = 0, tree: Bool = true,
     hidden: Parser = NoParser): ParseResult
 
   fun error_msg(): String => "expected not to see an error in this parser"
 
-  fun skip_hidden(source: String, offset: USize, hidden: Parser): USize =>
+  fun skip_hidden(source: Source, offset: USize, hidden: Parser): USize =>
     """
     Return a new start location, skipping over hidden tokens.
     """
     offset + hidden.parse(source, offset, false, NoParser)._1
 
-  fun result(source: String, offset: USize, from: USize, length: USize,
+  fun result(source: Source, offset: USize, from: USize, length: USize,
     tree: Bool, l: Label = NoLabel): ParseResult
   =>
     """
@@ -62,7 +62,7 @@ trait box Parser
   fun eof(): EndOfFile => EndOfFile(this)
 
 primitive NoParser is Parser
-  fun parse(source: String, offset: USize, tree: Bool, hidden: Parser)
+  fun parse(source: Source, offset: USize, tree: Bool, hidden: Parser)
     : ParseResult
   =>
     (0, Lex)

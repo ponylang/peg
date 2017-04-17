@@ -6,12 +6,12 @@ class Literal is Parser
   new val create(from: String) =>
     _text = from
 
-  fun parse(source: String, offset: USize, tree: Bool, hidden: Parser)
+  fun parse(source: Source, offset: USize, tree: Bool, hidden: Parser)
     : ParseResult
   =>
     let from = skip_hidden(source, offset, hidden)
 
-    if source.at(_text, from.isize()) then
+    if source.content.at(_text, from.isize()) then
       result(source, offset, from, _text.size(), tree)
     else
       (from - offset, this)

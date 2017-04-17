@@ -12,7 +12,7 @@ class Many is Parser
   fun label(): Label => _label
   fun ref node(value: Label): Many => _label = value; this
 
-  fun parse(source: String, offset: USize, tree: Bool, hidden: Parser)
+  fun parse(source: Source, offset: USize, tree: Bool, hidden: Parser)
     : ParseResult
   =>
     if tree then
@@ -21,7 +21,7 @@ class Many is Parser
       _parse_token(source, offset)
     end
 
-  fun _parse_tree(source: String, offset: USize, hidden: Parser): ParseResult =>
+  fun _parse_tree(source: Source, offset: USize, hidden: Parser): ParseResult =>
     var length = USize(0)
     var trailing = false
     let ast = AST(_label)
@@ -63,7 +63,7 @@ class Many is Parser
       (length, consume ast)
     end
 
-  fun _parse_token(source: String, offset: USize): ParseResult =>
+  fun _parse_token(source: Source, offset: USize): ParseResult =>
     var length = USize(0)
     var trailing = false
 

@@ -17,7 +17,7 @@ primitive Printer
       _indent(depth, indent, s)
     | let token: Token =>
       s.append(" ")
-      s.append(token.source, token.offset, token.length)
+      s.append(token.source.content, token.offset, token.length)
     end
     s.append(")\n")
     s

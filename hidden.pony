@@ -11,7 +11,7 @@ class Hidden is Parser
     _a = a
     _hide = hide
 
-  fun parse(source: String, offset: USize, tree: Bool, hidden: Parser)
+  fun parse(source: Source, offset: USize, tree: Bool, hidden: Parser)
     : ParseResult
   =>
     match _a.parse(source, offset, tree, _hide)

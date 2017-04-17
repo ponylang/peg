@@ -12,7 +12,7 @@ class Forward is Parser
   fun ref update(value: Parser) =>
     _a = value
 
-  fun parse(source: String, offset: USize, tree: Bool, hidden: Parser)
+  fun parse(source: Source, offset: USize, tree: Bool, hidden: Parser)
     : ParseResult
   =>
     if _a isnt NoParser then

@@ -1,14 +1,14 @@
 use "collections"
 
 primitive Position
-  fun apply(source: String, offset: USize): (USize, USize) =>
+  fun apply(source: Source, offset: USize): (USize, USize) =>
     var cr = false
     var line = USize(1)
     var col = USize(1)
 
     try
       for i in Range(0, offset) do
-        match source(i)
+        match source.content(i)
         | '\r' =>
           line = line + 1
           col = 1
@@ -29,9 +29,27 @@ primitive Position
 
     (line, col)
 
-  fun source_line(source: String, offset: USize, line: USize, col: USize)
-    : String
-  =>
+  fun text(source: Source, offset: USize, col: USize): String =>
     let start = ((offset - col) + 1).isize()
-    let finish = try source.find("\n", start) else source.size().isize() end
-    source.substring(start, finish)
+    let finish =
+      try
+        source.content.find("\n", start)
+      else
+        source.content.size().isize()
+      end
+    source.content.substring(start, finish)
+
+  fun indent(line: String, col: USize): String =>
+    recover
+      let s = String
+      try
+        for i in Range(0, col - 1) do
+          if line(i) == '\t' then
+            s.append("\t")
+          else
+            s.append(" ")
+          end
+        end
+      end
+      s
+    end

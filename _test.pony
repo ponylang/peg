@@ -8,24 +8,23 @@ actor Main
       else
         let auth = env.root as AmbientAuth
         let filename = env.args(1)
-        let p = (JsonParser() / PegParser()).eof()
+        let p = recover val (JsonParser() / PegParser()).eof() end
         peg_run(p, filename, auth, env.out)
       end
     end
 
-  fun peg_run(p: Parser, filename: String, auth: AmbientAuth, out: OutStream) =>
+  fun peg_run(p: Parser val, filename: String, auth: AmbientAuth, out: OutStream) =>
     """
     Run a parser over some source file and print the AST.
     """
     try
-      with file = OpenFile(FilePath(auth, filename)) as File do
-        let source: String = file.read_string(file.size())
-        match p.parse(source)
-        | (_, let r: ASTChild) =>
-          out.print(recover val Printer(r) end)
-        | (let offset: USize, let r: Parser) =>
-          out.writev(Error(filename, source, offset, "SYNTAX", r.error_msg()))
-        end
+      let source = Source(FilePath(auth, filename))
+      match recover val p.parse(source) end
+      | (_, let r: ASTChild) =>
+        out.print(recover val Printer(r) end)
+      | (let offset: USize, let r: Parser val) =>
+        let e = recover val SyntaxError(source, offset, r) end
+        out.writev(PegFormatError.console(e))
       end
     else
       out.print("Couldn't open file " + filename)
@@ -38,21 +37,16 @@ actor Main
     """
     try
       let peg_filename = env.args(1)
-      let source_filename = env.args(2)
+      let target_filename = env.args(2)
       let auth = env.root as AmbientAuth
+      let peg = Source(FilePath(auth, peg_filename))
 
-      with
-        peg_file = OpenFile(FilePath(auth, peg_filename)) as File
-      do
-        let peg: String = peg_file.read_string(peg_file.size())
-
-        match recover val PegCompiler(peg_filename, peg) end
-        | let p: Parser val =>
-          peg_run(p, source_filename, auth, env.out)
-        | let errors: Errors val =>
-          for e in errors.values() do
-            env.out.writev(e)
-          end
+      match recover val PegCompiler(peg) end
+      | let p: Parser val =>
+        peg_run(p, target_filename, auth, env.out)
+      | let errors: Array[PegError] val =>
+        for e in errors.values() do
+          env.out.writev(PegFormatError.console(e))
         end
       end
     end

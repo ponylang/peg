@@ -18,7 +18,7 @@ class Sequence is Parser
   fun mul(that: Parser): Sequence =>
     concat(this, that)
 
-  fun parse(source: String, offset: USize, tree: Bool, hidden: Parser)
+  fun parse(source: Source, offset: USize, tree: Bool, hidden: Parser)
     : ParseResult
   =>
     if tree then
@@ -27,7 +27,7 @@ class Sequence is Parser
       _parse_token(source, offset)
     end
 
-  fun _parse_tree(source: String, offset: USize, hidden: Parser): ParseResult =>
+  fun _parse_tree(source: Source, offset: USize, hidden: Parser): ParseResult =>
     var length = USize(0)
     let ast = AST(_label)
 
@@ -62,7 +62,7 @@ class Sequence is Parser
       (length, consume ast)
     end
 
-  fun _parse_token(source: String, offset: USize): ParseResult =>
+  fun _parse_token(source: Source, offset: USize): ParseResult =>
     var length = USize(0)
 
     for p in _seq.values() do

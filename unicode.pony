@@ -1,10 +1,10 @@
 primitive Unicode is Parser
-  fun parse(source: String, offset: USize, tree: Bool, hidden: Parser)
+  fun parse(source: Source, offset: USize, tree: Bool, hidden: Parser)
     : ParseResult
   =>
     let from = skip_hidden(source, offset, hidden)
     try
-      (let c, let length) = source.utf32(from.isize())
+      (let c, let length) = source.content.utf32(from.isize())
       if c != 0xFFFD then
         return result(source, offset, from, length.usize(), tree)
       end
@@ -23,12 +23,12 @@ class UnicodeRange is Parser
     _low = low
     _hi = hi
 
-  fun parse(source: String, offset: USize, tree: Bool, hidden: Parser)
+  fun parse(source: Source, offset: USize, tree: Bool, hidden: Parser)
     : ParseResult
   =>
     let from = skip_hidden(source, offset, hidden)
     try
-      (let c, let length) = source.utf32(from.isize())
+      (let c, let length) = source.content.utf32(from.isize())
       if (c != 0xFFFD) and (c >= _low) and (c <= _hi) then
         return result(source, offset, from, length.usize(), tree)
       end
