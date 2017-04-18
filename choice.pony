@@ -20,7 +20,7 @@ class Choice is Parser
   fun parse(source: Source, offset: USize, tree: Bool, hidden: Parser)
     : ParseResult
   =>
-    var fail: (USize, Parser) = (0, NoParser)
+    var fail: (USize, Parser) = (0, this)
 
     for p in _seq.values() do
       match p.parse(source, offset, tree, hidden)
@@ -32,3 +32,5 @@ class Choice is Parser
       end
     end
     fail
+
+  fun error_msg(): String => try _seq(0).error_msg() else "an empty choice" end

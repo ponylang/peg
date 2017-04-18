@@ -105,12 +105,11 @@ class Many is Parser
 
   fun error_msg(): String =>
     recover
-      let s = String.>append("expected ")
+      let s = String
       if _require then s.append("at least one ") end
       s.append("element")
       if _sep isnt NoParser then
-        s.append(" without a trailing ")
-        s.append(_sep.error_msg())
+        s.append(" without a trailing separator")
       end
       s
     end

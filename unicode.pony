@@ -11,7 +11,7 @@ primitive Unicode is Parser
     end
     (from - offset, this)
 
-  fun error_msg(): String => "expected a unicode character"
+  fun error_msg(): String => "a unicode character"
 
 type R is UnicodeRange
 
@@ -38,7 +38,7 @@ class UnicodeRange is Parser
   fun error_msg(): String =>
     recover
       String
-        .> append("expected a unicode character between ")
+        .> append("a unicode character between ")
         .> push_utf32(_low)
         .> append(" and ")
         .> push_utf32(_hi)

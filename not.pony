@@ -16,4 +16,4 @@ class Not is Parser
       (0, Skipped)
     end
 
-  fun error_msg(): String => "expected not to find " + _a.error_msg()
+  fun error_msg(): String => "not to find " + _a.error_msg()

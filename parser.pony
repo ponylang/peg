@@ -28,7 +28,7 @@ trait box Parser
   fun parse(source: Source, offset: USize = 0, tree: Bool = true,
     hidden: Parser = NoParser): ParseResult
 
-  fun error_msg(): String => "expected not to see an error in this parser"
+  fun error_msg(): String => "not to see an error in this parser"
 
   fun skip_hidden(source: Source, offset: USize, hidden: Parser): USize =>
     """
@@ -67,7 +67,7 @@ primitive NoParser is Parser
   =>
     (0, Lex)
 
-  fun error_msg(): String => "expected not to be using NoParser"
+  fun error_msg(): String => "not to be using NoParser"
 
 trait val Label
   fun text(): String

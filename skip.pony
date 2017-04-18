@@ -13,3 +13,5 @@ class Skip is Parser
     else
       (0, this)
     end
+
+  fun error_msg(): String => _a.error_msg()

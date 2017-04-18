@@ -14,7 +14,7 @@ primitive PegCompiler
       if errors.size() > 0 then
         errors
       else
-        r
+        r.eof()
       end
     | (let offset: USize, let r: Parser) =>
       errors.push(SyntaxError(source, offset, r))

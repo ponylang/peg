@@ -27,7 +27,7 @@ class SyntaxError is PegError
     """
 
   fun markers(): Iterator[Marker] =>
-    [(source, offset, USize(1), parser.error_msg())].values()
+    [(source, offset, USize(1), "expected " + parser.error_msg())].values()
 
 class val DuplicateDefinition is PegError
   let def: Token
