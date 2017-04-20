@@ -100,7 +100,7 @@ primitive PegFormatError
   fun console(e: PegError val): ByteSeqIter =>
     let text =
       recover
-        [ ANSI.blue()
+        [ ANSI.cyan()
           "-- "; e.category(); " --\n\n"
           ANSI.reset()
         ]
@@ -116,14 +116,20 @@ primitive PegFormatError
         mark.append("^")
       end
 
+      let line_text: String = line.string()
+      let line_indent = Position.indent(line_text, line_text.size() + 1)
+
       text.append(
         recover
-          [ as String:
-            m._1.path; ":"; line.string(); ":"; col.string(); ":\n\n"
+          [ ANSI.grey()
+            m._1.path; ":"; line_text; ":"; col.string(); ":"; m._3.string()
+            "\n\n"
+            line_text; ": "
+            ANSI.reset()
             source; "\n"
             ANSI.red()
-            indent; consume mark; "\n"
-            indent; m._4
+            line_indent; "  "; indent; consume mark; "\n"
+            line_indent; "  "; indent; m._4
             ANSI.reset()
             "\n\n"
           ]
