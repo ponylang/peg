@@ -42,7 +42,8 @@ primitive PegParser
       let definition = (ident * -L("<-") * expr).node(PegDef)
 
       let whitespace = (L(" ") / L("\t") / L("\r") / L("\n")).many1()
-      let linecomment = L("//") * (not L("\r") * not L("\n") * Unicode).many()
+      let linecomment =
+        (L("#") / L("//")) * (not L("\r") * not L("\n") * Unicode).many()
       let nestedcomment = Forward
       nestedcomment() =
         L("/*") *
