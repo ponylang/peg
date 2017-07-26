@@ -15,4 +15,4 @@ class val AST
   fun size(): USize => children.size()
 
   fun extract(): ASTChild =>
-    try children(0) else NotPresent end
+    try children(0)? else NotPresent end

@@ -33,4 +33,4 @@ class Choice is Parser
     end
     fail
 
-  fun error_msg(): String => try _seq(0).error_msg() else "an empty choice" end
+  fun error_msg(): String => try _seq(0)?.error_msg() else "an empty choice" end

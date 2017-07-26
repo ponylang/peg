@@ -79,4 +79,4 @@ class Sequence is Parser
     (length, Lex)
 
   fun error_msg(): String =>
-    try _seq(0).error_msg() else "an empty sequence" end
+    try _seq(0)?.error_msg() else "an empty sequence" end
