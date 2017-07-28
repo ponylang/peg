@@ -8,7 +8,7 @@ primitive Position
 
     try
       for i in Range(0, offset) do
-        match source.content(i)
+        match source.content(i)?
         | '\r' =>
           line = line + 1
           col = 1
@@ -33,7 +33,7 @@ primitive Position
     let start = ((offset - col) + 1).isize()
     let finish =
       try
-        source.content.find("\n", start)
+        source.content.find("\n", start)?
       else
         source.content.size().isize()
       end
@@ -44,7 +44,7 @@ primitive Position
       let s = String
       try
         for i in Range(0, col - 1) do
-          if line(i) == '\t' then
+          if line(i)? == '\t' then
             s.append("\t")
           else
             s.append(" ")

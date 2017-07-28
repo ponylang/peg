@@ -41,9 +41,9 @@ primitive PegCompiler
 
     if errors.size() == 0 then
       try
-        (var start: Parser, _) = defs("start")
+        (var start: Parser, _) = defs("start")?
         if defs.contains("hidden") then
-          start = start.hide(defs("hidden")._1)
+          start = start.hide(defs("hidden")?._1)
         end
         return start
       end
@@ -53,11 +53,11 @@ primitive PegCompiler
 
   fun _forward_definition(errors: Array[PegError], defs: Defs, ast: AST) =>
     try
-      let token = ast.children(0) as Token
+      let token = ast.children(0)? as Token
       let ident: String = token.string()
 
       if defs.contains(ident) then
-        (_, let prev) = defs(ident)
+        (_, let prev) = defs(ident)?
         errors.push(DuplicateDefinition(token, prev))
       else
         defs(ident) = (Forward, token)
@@ -66,12 +66,12 @@ primitive PegCompiler
 
   fun _compile_definition(errors: Array[PegError], defs: Defs, ast: AST) =>
     try
-      let ident: String = (ast.children(0) as Token).string()
-      let rule = _compile_expr(errors, defs, ast.children(1))
-      (let p, _) = defs(ident)
+      let ident: String = (ast.children(0)? as Token).string()
+      let rule = _compile_expr(errors, defs, ast.children(1)?)
+      (let p, _) = defs(ident)?
 
       if not p.complete() then
-        let c = ident(0)
+        let c = ident(0)?
         if (c >= 'A') and (c <= 'Z') then
           p() = rule.term(PegLabel(ident))
         else
@@ -93,42 +93,42 @@ primitive PegCompiler
       match node.label()
       | PegChoice =>
         let ast = node as AST
-        var p = _compile_expr(errors, defs, ast.children(0))
+        var p = _compile_expr(errors, defs, ast.children(0)?)
         for i in Range(1, ast.children.size()) do
-          p = p / _compile_expr(errors, defs, ast.children(i))
+          p = p / _compile_expr(errors, defs, ast.children(i)?)
         end
         p
       | PegSeq =>
         let ast = node as AST
-        var p = _compile_expr(errors, defs, ast.children(0))
+        var p = _compile_expr(errors, defs, ast.children(0)?)
         for i in Range(1, ast.children.size()) do
-          p = p * _compile_expr(errors, defs, ast.children(i))
+          p = p * _compile_expr(errors, defs, ast.children(i)?)
         end
         p
       | PegSkip =>
-        -_compile_expr(errors, defs, (node as AST).children(0))
+        -_compile_expr(errors, defs, (node as AST).children(0)?)
       | PegNot =>
-        not _compile_expr(errors, defs, (node as AST).children(0))
+        not _compile_expr(errors, defs, (node as AST).children(0)?)
       | PegAnd =>
-        not not _compile_expr(errors, defs, (node as AST).children(0))
+        not not _compile_expr(errors, defs, (node as AST).children(0)?)
       | PegMany1 =>
-        _compile_expr(errors, defs, (node as AST).children(0)).many1()
+        _compile_expr(errors, defs, (node as AST).children(0)?).many1()
       | PegMany =>
-        _compile_expr(errors, defs, (node as AST).children(0)).many()
+        _compile_expr(errors, defs, (node as AST).children(0)?).many()
       | PegSep1 =>
         let ast = node as AST
-        let sep = _compile_expr(errors, defs, ast.children(1))
-        _compile_expr(errors, defs, ast.children(0)).many1(sep)
+        let sep = _compile_expr(errors, defs, ast.children(1)?)
+        _compile_expr(errors, defs, ast.children(0)?).many1(sep)
       | PegSep =>
         let ast = node as AST
-        let sep = _compile_expr(errors, defs, ast.children(1))
-        _compile_expr(errors, defs, ast.children(0)).many(sep)
+        let sep = _compile_expr(errors, defs, ast.children(1)?)
+        _compile_expr(errors, defs, ast.children(0)?).many(sep)
       | PegOpt =>
-        _compile_expr(errors, defs, (node as AST).children(0)).opt()
+        _compile_expr(errors, defs, (node as AST).children(0)?).opt()
       | PegRange =>
         let ast = node as AST
-        let a = _unescape(ast.children(0) as Token).utf32(0)._1
-        let b = _unescape(ast.children(1) as Token).utf32(0)._1
+        let a = _unescape(ast.children(0)? as Token).utf32(0)?._1
+        let b = _unescape(ast.children(1)? as Token).utf32(0)?._1
         R(a, b)
       | PegIdent =>
         let token = node as Token
@@ -137,7 +137,7 @@ primitive PegCompiler
           errors.push(MissingDefinition(token))
           NoParser
         else
-          defs(ident)._1
+          defs(ident)?._1
         end
       | PegAny =>
         R(' ')

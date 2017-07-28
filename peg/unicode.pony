@@ -4,7 +4,7 @@ primitive Unicode is Parser
   =>
     let from = skip_hidden(source, offset, hidden)
     try
-      (let c, let length) = source.content.utf32(from.isize())
+      (let c, let length) = source.content.utf32(from.isize())?
       if c != 0xFFFD then
         return result(source, offset, from, length.usize(), tree)
       end
@@ -28,7 +28,7 @@ class UnicodeRange is Parser
   =>
     let from = skip_hidden(source, offset, hidden)
     try
-      (let c, let length) = source.content.utf32(from.isize())
+      (let c, let length) = source.content.utf32(from.isize())?
       if (c != 0xFFFD) and (c >= _low) and (c <= _hi) then
         return result(source, offset, from, length.usize(), tree)
       end
