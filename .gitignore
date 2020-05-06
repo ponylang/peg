@@ -1,3 +1,5 @@
-peg1
-*.dSYM/
-*.txt
+/build/*
+TAGS
+tags
+/_repo/*
+/_corral/*
