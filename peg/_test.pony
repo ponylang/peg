@@ -1,52 +1,47 @@
 use "files"
+use "ponytest"
 
-actor Main
+actor Main is TestList
   new create(env: Env) =>
-    try
-      if env.args.size() >= 3 then
-        peg_compiler(env)
-      else
-        let auth = env.root as AmbientAuth
-        let filename = env.args(1)?
-        let p = recover val (JsonParser() / PegParser()).eof() end
-        peg_run(p, filename, auth, env.out)
+    PonyTest(env, this)
+
+  fun tag tests(test: PonyTest) =>
+    test(_TestFromFile("json", "json_test.json", "json_out.txt"))
+
+class iso _TestFromFile is UnitTest
+  let _example: String
+  let _test: String
+  let _expect: String
+
+  new iso create(example: String, test: String, expect: String) =>
+    (_example, _test, _expect) = (example, test, expect)
+
+  fun name(): String =>
+    _example
+
+  fun apply(h: TestHelper) ? =>
+    let auth = h.env.root as AmbientAuth
+    let peg_file = FilePath(auth, "examples/" + _example + ".peg")?
+    let test_file = FilePath(auth, "test/" + _test)?
+    let expect_file = FilePath(auth, "test/" + _expect)?
+    match recover val PegCompiler(Source(peg_file)?) end
+    | let p: Parser val =>
+      let out = peg_run(h, p, Source(test_file)?)?
+      with file = OpenFile(expect_file) as File do
+        h.assert_eq[String](file.read_string(file.size()), out)
+      end
+    | let errors: Array[PegError] val =>
+      for e in errors.values() do
+        h.env.err.printv(PegFormatError.console(e))
       end
     end
 
-  fun peg_run(p: Parser val, filename: String, auth: AmbientAuth, out: OutStream) =>
-    """
-    Run a parser over some source file and print the AST.
-    """
-    try
-      let source = Source(FilePath(auth, filename)?)?
-      match recover val p.parse(source) end
-      | (_, let r: ASTChild) =>
-        out.print(recover val Printer(r) end)
-      | (let offset: USize, let r: Parser val) =>
-        let e = recover val SyntaxError(source, offset, r) end
-        out.writev(PegFormatError.console(e))
-      end
-    else
-      out.print("Couldn't open file " + filename)
-    end
-
-  fun peg_compiler(env: Env) =>
-    """
-    Compile a parser from the first file, then run it over the second file and
-    print the AST.
-    """
-    try
-      let peg_filename = env.args(1)?
-      let target_filename = env.args(2)?
-      let auth = env.root as AmbientAuth
-      let peg = Source(FilePath(auth, peg_filename)?)?
-
-      match recover val PegCompiler(peg) end
-      | let p: Parser val =>
-        peg_run(p, target_filename, auth, env.out)
-      | let errors: Array[PegError] val =>
-        for e in errors.values() do
-          env.out.writev(PegFormatError.console(e))
-        end
-      end
+  fun peg_run(h: TestHelper, p: Parser val, source: Source): String ? =>
+    match recover val p.parse(source) end
+    | (_, let r: ASTChild) => recover Printer(r) end
+    | (let offset: USize, let r: Parser val) =>
+      let e = recover val SyntaxError(source, offset, r) end
+      h.env.out.writev(PegFormatError.console(e))
+      error
+    else error
     end
