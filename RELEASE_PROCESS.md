@@ -19,7 +19,7 @@ Before getting started, you will need a number for the version that you will be 
 
 The "golden commit" must be `HEAD` on the `master` branch of this repository. At this time, releasing from any other location is not supported.
 
-For the duration of this document, that we are releasing version is `0.3.1`. Any place you see those values, please substitute your own version.
+In this document, we pretend that the new release version is `0.3.1`. Wherever you see those values, please substitute with your own version.
 
 ```bash
 git tag release-0.3.1
