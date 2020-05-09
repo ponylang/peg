@@ -8,7 +8,7 @@ You must have commit access to the peg repository
 
 ## Releasing
 
-Please note that this document was written with the assumption that you are using a clone of the `peg` repo. You have to be using a clone rather than a fork. It is advised to your do this by making a fresh clone of the `peg` repo from which you will release.
+Please note that this document was written with the assumption that you are using a clone of the `peg` repo. You have to be using a clone rather than a fork. It is advised that you do this by making a fresh clone of the `peg` repo from which you will release.
 
 ```bash
 git clone git@github.com:ponylang/peg.git peg-release-clean
