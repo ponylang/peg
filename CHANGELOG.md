@@ -13,3 +13,9 @@ All notable changes to this project will be documented in this file. This projec
 ### Changed
 
 
+## [0.1.0] - 2020-05-06
+
+### Added
+
+- Initial version
+
