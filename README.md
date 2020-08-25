@@ -3,6 +3,7 @@
 Parser Expression Grammar compiler and combinators
 
 ## Installation
+
 - Install [corral](https://github.com/ponylang/corral)
 - `corral add github.com/ponylang/peg.git`
 - `corral fetch` to fetch your dependencies
@@ -115,7 +116,8 @@ primitive TNull is Label fun text(): String => "Null"
 
 An executable example of the parser compiler is found in examples/compiler.
 You can compile the executable by running `make build-examples`.
-```
+
+```console
 Usage:
   ./build/release/compiler <source-file>
       Run a PEG/JSON parser over some source file and print the AST.
