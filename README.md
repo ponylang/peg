@@ -10,6 +10,10 @@ Parser Expression Grammar compiler and combinators
 - `use "peg"` to include this package
 - `corral run -- ponyc` to compile your application
 
+## API Documentation
+
+[https://ponylang.github.io/peg/](https://ponylang.github.io/peg/)
+
 ## Resources for PEGs
 
 - [Wikipedia](https://en.wikipedia.org/wiki/Parsing_expression_grammar)
