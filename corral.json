@@ -1,4 +1,12 @@
 {
+  "packages": ["peg"],
   "deps": [],
-  "info": {}
+  "info": {
+    "description": "A parsing expression grammar package",
+    "homepage": "https://github.com/ponylang/peg",
+    "license": "BSD-2-Clause",
+    "documentation_url": "https://ponylang.github.io/peg/",
+    "version": "0.1.0",
+    "name": "peg"
+  }
 }
