@@ -32,7 +32,7 @@ actor Main
     Run a parser over some source file and print the AST.
     """
     try
-      let source = Source(FilePath(auth, filename)?)?
+      let source = Source(FilePath(auth, filename))?
       match recover val p.parse(source) end
       | (_, let r: ASTChild) =>
         out.print(recover val Printer(r) end)
@@ -53,7 +53,7 @@ actor Main
       let peg_filename = env.args(1)?
       let target_filename = env.args(2)?
       let auth = env.root as AmbientAuth
-      let peg = Source(FilePath(auth, peg_filename)?)?
+      let peg = Source(FilePath(auth, peg_filename))?
 
       match recover val PegCompiler(peg) end
       | let p: Parser val =>

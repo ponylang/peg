@@ -21,9 +21,9 @@ class iso _TestFromFile is UnitTest
 
   fun apply(h: TestHelper) ? =>
     let auth = h.env.root as AmbientAuth
-    let peg_file = FilePath(auth, "examples/" + _example + ".peg")?
-    let test_file = FilePath(auth, "test/" + _test)?
-    let expect_file = FilePath(auth, "test/" + _expect)?
+    let peg_file = FilePath(auth, "examples/" + _example + ".peg")
+    let test_file = FilePath(auth, "test/" + _test)
+    let expect_file = FilePath(auth, "test/" + _expect)
     match recover val PegCompiler(Source(peg_file)?) end
     | let p: Parser val =>
       let out = peg_run(h, p, Source(test_file)?)?
