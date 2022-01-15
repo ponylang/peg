@@ -6,7 +6,7 @@ actor Main
     try
       match env.args.size()
       | 2 =>
-        let auth = env.root as AmbientAuth
+        let auth = env.root
         let filename = env.args(1)?
         let p = recover val (JsonParser() / PegParser()).eof() end
         peg_run(p, filename, auth, env.out)
@@ -52,7 +52,7 @@ actor Main
     try
       let peg_filename = env.args(1)?
       let target_filename = env.args(2)?
-      let auth = env.root as AmbientAuth
+      let auth = env.root
       let peg = Source(FilePath(auth, peg_filename))?
 
       match recover val PegCompiler(peg) end

@@ -20,7 +20,7 @@ class iso _TestFromFile is UnitTest
     _example
 
   fun apply(h: TestHelper) ? =>
-    let auth = h.env.root as AmbientAuth
+    let auth = h.env.root
     let peg_file = FilePath(auth, "examples/" + _example + ".peg")
     let test_file = FilePath(auth, "test/" + _test)
     let expect_file = FilePath(auth, "test/" + _expect)
