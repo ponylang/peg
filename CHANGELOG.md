@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Changed
 
+- Update for change in Env.root type ([PR #24](https://github.com/ponylang/peg/pull/24))
 
 ## [0.1.2] - 2021-09-03
 
