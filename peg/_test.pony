@@ -1,14 +1,14 @@
 use "files"
 use "ponytest"
 
-actor Main is TestList
+actor \nodoc\ Main is TestList
   new create(env: Env) =>
     PonyTest(env, this)
 
   fun tag tests(test: PonyTest) =>
     test(_TestFromFile("json", "json_test.json", "json_out.txt"))
 
-class iso _TestFromFile is UnitTest
+class \nodoc\ iso _TestFromFile is UnitTest
   let _example: String
   let _test: String
   let _expect: String
