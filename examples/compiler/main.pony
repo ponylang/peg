@@ -6,7 +6,7 @@ actor Main
     try
       match env.args.size()
       | 2 =>
-        let auth = env.root
+        let auth = FileAuth(env.root)
         let filename = env.args(1)?
         let p = recover val (JsonParser() / PegParser()).eof() end
         peg_run(p, filename, auth, env.out)
@@ -27,7 +27,11 @@ actor Main
       end
     end
 
-  fun peg_run(p: Parser val, filename: String, auth: AmbientAuth, out: OutStream) =>
+  fun peg_run(p: Parser val,
+    filename: String,
+    auth: FileAuth,
+    out: OutStream)
+  =>
     """
     Run a parser over some source file and print the AST.
     """
@@ -52,7 +56,7 @@ actor Main
     try
       let peg_filename = env.args(1)?
       let target_filename = env.args(2)?
-      let auth = env.root
+      let auth = FileAuth(env.root)
       let peg = Source(FilePath(auth, peg_filename))?
 
       match recover val PegCompiler(peg) end
