@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Changed
 
+- Update to work with object capabilities changes in Pony 0.49.0 ([PR #26](https://github.com/ponylang/peg/pull/26))
 
 ## [0.1.3] - 2022-01-16
 
