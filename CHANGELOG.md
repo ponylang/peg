@@ -2,17 +2,11 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepachangelog.com/).
 
-## [unreleased] - unreleased
+## [0.1.5] - 2023-10-07
 
 ### Fixed
 
 - Remove usage of a `box` inside a recover ([PR #42](https://github.com/ponylang/peg/pull/42))
-
-### Added
-
-
-### Changed
-
 
 ## [0.1.4] - 2022-02-26
 
