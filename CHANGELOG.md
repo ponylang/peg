@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Fixed
 
+- Remove usage of a `box` inside a recover ([PR #42](https://github.com/ponylang/peg/pull/42))
 
 ### Added
 
