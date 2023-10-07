@@ -104,11 +104,13 @@ class Many is Parser
     end
 
   fun error_msg(): String =>
+    let sinp = _sep isnt NoParser
+
     recover
       let s = String
       if _require then s.append("at least one ") end
       s.append("element")
-      if _sep isnt NoParser then
+      if sinp then
         s.append(" without a trailing separator")
       end
       s
