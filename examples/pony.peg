@@ -32,7 +32,7 @@ array <- -'[' (-"as" type -':')? seq -']'
 object <- -"object" cap? (-"is" type)? members -"end"
 lambda <-
   -'{' cap? ID? typeparams? -'(' params? -')' captures? (-':' type)? '?'?
-    '=>' seq '}' cap?
+  "=>" seq '}' cap?
 ffi <- '@' (ID / STRING) typeargs? -'(' positional? named? -')' '?'?
 
 // TODO: ID should reject keywords, or reject them later on?
