@@ -2,17 +2,11 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org/) and [Keep a CHANGELOG](http://keepachangelog.com/).
 
-## [unreleased] - unreleased
-
-### Fixed
-
+## [0.1.6] - 2024-01-09
 
 ### Added
 
 - Add support for not outputting color to terminal ([PR #44](https://github.com/ponylang/peg/pull/44))
-
-### Changed
-
 
 ## [0.1.5] - 2023-10-07
 
