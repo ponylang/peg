@@ -97,12 +97,12 @@ primitive MalformedAST is PegError
     """
 
 primitive PegFormatError
-  fun console(e: PegError val): ByteSeqIter =>
+  fun console(e: PegError val, colorize: Bool = true): ByteSeqIter =>
     let text =
       recover
-        [ ANSI.cyan()
+        [ if colorize then ANSI.cyan() else "" end
           "-- "; e.category(); " --\n\n"
-          ANSI.reset()
+          if colorize then ANSI.reset() else "" end
         ]
       end
 
@@ -121,16 +121,16 @@ primitive PegFormatError
 
       text.append(
         recover
-          [ ANSI.grey()
+          [ if colorize then ANSI.grey() else "" end
             m._1.path; ":"; line_text; ":"; col.string(); ":"; m._3.string()
             "\n\n"
             line_text; ": "
-            ANSI.reset()
+            if colorize then ANSI.reset() else "" end
             source; "\n"
-            ANSI.red()
+            if colorize then ANSI.red() else "" end
             line_indent; "  "; indent; consume mark; "\n"
             line_indent; "  "; indent; m._4
-            ANSI.reset()
+            if colorize then ANSI.reset() else "" end
             "\n\n"
           ]
         end
