@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Added
 
+- Add support for not outputting color to terminal ([PR #44](https://github.com/ponylang/peg/pull/44))
 
 ### Changed
 
