@@ -184,7 +184,7 @@ primitive PegCompiler
         elseif rune == '\\' then
           escape = true
         elseif hex > 0 then
-          hexrune = (hexrune << 8) or match rune
+          hexrune = (hexrune << 8) or match \exhaustive\ rune
           | if (rune >= '0') and (rune <= '9') => rune - '0'
           | if (rune >= 'a') and (rune <= 'f') => (rune - 'a') + 10
           else (rune - 'A') + 10 end
