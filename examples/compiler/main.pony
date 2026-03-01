@@ -59,7 +59,7 @@ actor Main
       let auth = FileAuth(env.root)
       let peg = Source(FilePath(auth, peg_filename))?
 
-      match recover val PegCompiler(peg) end
+      match \exhaustive\ recover val PegCompiler(peg) end
       | let p: Parser val =>
         peg_run(p, target_filename, auth, env.out)
       | let errors: Array[PegError] val =>
