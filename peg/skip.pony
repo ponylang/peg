@@ -1,4 +1,10 @@
 class Skip is Parser
+  """
+  Matches the wrapped parser but omits it from the parse tree, returning
+  `Skipped` on success. This is a PEG extension (`-e` in PEG files, `-e`
+  in combinators) used for syntactic punctuation like brackets and keywords
+  that are needed for parsing but carry no semantic value.
+  """
   let _a: Parser
 
   new create(a: Parser) =>

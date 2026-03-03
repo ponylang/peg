@@ -1,4 +1,9 @@
 class Option is Parser
+  """
+  Optional match. If the wrapped parser succeeds, returns its result.
+  Otherwise, succeeds with `NotPresent` (consuming no input). Corresponds
+  to `e?` in PEG files and `e.opt()` in combinators.
+  """
   let _a: Parser
 
   new create(a: Parser) =>

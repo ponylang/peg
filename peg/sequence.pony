@@ -1,4 +1,11 @@
 class Sequence is Parser
+  """
+  An ordered sequence of parsers that must all match in order. Built with
+  the `*` operator: `a * b * c`.
+
+  When a `Sequence` has no label, its children are inlined into the parent
+  node. Assign a label with `node()` to create a distinct AST node.
+  """
   let _seq: Array[Parser]
   var _label: Label
 
@@ -12,8 +19,13 @@ class Sequence is Parser
     _seq = consume r
     _label = a._label
 
-  fun label(): Label => _label
-  fun ref node(value: Label): Sequence => _label = value; this
+  fun label(): Label =>
+    """This sequence's label."""
+    _label
+
+  fun ref node(value: Label): Sequence =>
+    """Assign a label, creating a named AST node for this sequence."""
+    _label = value; this
 
   fun mul(that: Parser): Sequence =>
     concat(this, that)

@@ -1,14 +1,26 @@
 use "collections"
 use "term"
 
+// An error marker: (source, byte offset, length, message). Used by
+// PegFormatError to point at specific locations in the source text.
 type Marker is (Source, USize, USize, String)
 
 trait box PegError
+  """
+  Base trait for errors produced during parsing or grammar compilation.
+  """
+  // Short category name (e.g. "Syntax Error", "Missing Definition").
   fun category(): String
+  // Human-readable explanation of the error.
   fun description(): String
+  // Source locations related to this error, with explanatory messages.
   fun markers(): Iterator[Marker] => Array[Marker].values()
 
 class SyntaxError is PegError
+  """
+  A parse failed at a specific offset. Wraps the failing parser so its
+  `error_msg()` can describe what was expected.
+  """
   let source: Source
   let offset: USize
   let parser: Parser
@@ -30,6 +42,7 @@ class SyntaxError is PegError
     [(source, offset, USize(1), "expected " + parser.error_msg())].values()
 
 class val DuplicateDefinition is PegError
+  """A rule name was defined more than once in a PEG grammar."""
   let def: Token
   let prev: Token
 
@@ -50,6 +63,7 @@ class val DuplicateDefinition is PegError
     ].values()
 
 class val MissingDefinition is PegError
+  """A rule references another rule that has not been defined."""
   let token: Token
 
   new val create(token': Token) =>
@@ -67,6 +81,7 @@ class val MissingDefinition is PegError
     ].values()
 
 class val UnknownNodeLabel is PegError
+  """An unrecognized label was encountered in the PEG AST during compilation."""
   let label: Label
 
   new val create(label': Label) =>
@@ -81,6 +96,7 @@ class val UnknownNodeLabel is PegError
     """
 
 primitive NoStartDefinition is PegError
+  """The grammar has no `start` rule."""
   fun category(): String => "No Start Rule"
   fun description(): String =>
     """
@@ -89,6 +105,7 @@ primitive NoStartDefinition is PegError
     """
 
 primitive MalformedAST is PegError
+  """The PEG AST has a structure the compiler does not understand."""
   fun category(): String => "Malformed AST"
   fun description(): String =>
     """
@@ -97,7 +114,14 @@ primitive MalformedAST is PegError
     """
 
 primitive PegFormatError
+  """
+  Formats `PegError` values for display on a terminal or as JSON.
+  """
   fun console(e: PegError val, colorize: Bool = true): ByteSeqIter =>
+    """
+    Format an error for terminal output. Set `colorize` to false to omit
+    ANSI escape sequences (useful when piping to non-terminal destinations).
+    """
     let text =
       recover
         [ if colorize then ANSI.cyan() else "" end
@@ -148,6 +172,7 @@ primitive PegFormatError
     text
 
   fun json(e: PegError val): ByteSeqIter =>
+    """Format an error as a JSON object."""
     let text =
       recover
         [ "{\n  \"category\": \""

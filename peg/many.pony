@@ -1,4 +1,13 @@
 class Many is Parser
+  """
+  Repetition parser with optional separator. Matches an element zero or more
+  times (or one or more when `require` is true). When a separator is provided,
+  elements must be separated by it and trailing separators are not allowed.
+
+  In PEG files: `e*` / `e+` for unseparated, `e % sep` / `e %+ sep` for
+  separated lists. In combinators: `e.many()` / `e.many1()` and
+  `e.many(sep)` / `e.many1(sep)`.
+  """
   let _a: Parser
   let _sep: Parser
   var _label: Label = NoLabel
@@ -9,8 +18,13 @@ class Many is Parser
     _sep = sep
     _require = require
 
-  fun label(): Label => _label
-  fun ref node(value: Label): Many => _label = value; this
+  fun label(): Label =>
+    """This repetition's label."""
+    _label
+
+  fun ref node(value: Label): Many =>
+    """Assign a label, creating a named AST node for this repetition."""
+    _label = value; this
 
   fun parse(source: Source, offset: USize, tree: Bool, hidden: Parser)
     : ParseResult

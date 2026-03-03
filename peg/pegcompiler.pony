@@ -1,10 +1,21 @@
 use "term"
 use "collections"
 
+// Internal map from rule name to its Forward parser and defining token.
 type Defs is Map[String, (Forward, Token)]
 
 primitive PegCompiler
+  """
+  Compiles a PEG grammar source into an executable `Parser`. Returns either
+  the compiled parser or an array of errors found during compilation. The
+  grammar must define a `start` rule and may define a `hidden` rule for
+  whitespace/comments.
+  """
   fun apply(source: Source): (Parser | Array[PegError]) =>
+    """
+    Compile `source` as a PEG grammar. On success, returns a `Parser val`
+    ready to parse input. On failure, returns the accumulated errors.
+    """
     let p: Parser = PegParser().eof()
     let errors = Array[PegError]
 
@@ -200,6 +211,11 @@ primitive PegCompiler
     end
 
 class val PegLabel is Label
+  """
+  A label created at runtime from a rule name in a compiled PEG grammar.
+  Unlike the primitive labels used in combinator-built parsers, these are
+  class instances with string-based identity.
+  """
   let _text: String
 
   new val create(text': String) =>

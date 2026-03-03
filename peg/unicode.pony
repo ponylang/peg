@@ -1,4 +1,9 @@
 primitive Unicode is Parser
+  """
+  Matches any single valid Unicode character. Note that in PEG files, the `.`
+  operator compiles to `R(' ')` instead, which excludes control characters
+  below U+0020.
+  """
   fun parse(source: Source, offset: USize, tree: Bool, hidden: Parser)
     : ParseResult
   =>
@@ -13,9 +18,14 @@ primitive Unicode is Parser
 
   fun error_msg(): String => "a unicode character"
 
+// Short alias for `UnicodeRange`.
 type R is UnicodeRange
 
 class UnicodeRange is Parser
+  """
+  Matches any single Unicode character whose codepoint falls within the given
+  range (the `'a'..'z'` operator in PEG files).
+  """
   let _low: U32
   let _hi: U32
 

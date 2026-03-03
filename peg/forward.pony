@@ -10,6 +10,7 @@ class Forward is Parser
     None
 
   fun ref update(value: Parser) =>
+    """Assign the real parser. Called via `()` sugar: `fwd() = real_parser`."""
     _a = value
 
   fun parse(source: Source, offset: USize, tree: Bool, hidden: Parser)
@@ -21,6 +22,8 @@ class Forward is Parser
       (0, this)
     end
 
-  fun complete(): Bool => _a isnt NoParser
+  fun complete(): Bool =>
+    """True if a real parser has been assigned via `update()`."""
+    _a isnt NoParser
 
   fun error_msg(): String => _a.error_msg()

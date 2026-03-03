@@ -1,4 +1,9 @@
 primitive PegParser
+  """
+  The built-in parser for `.peg` grammar files. Used internally by
+  `PegCompiler` to parse grammar source before compilation. Supports
+  `//`, `#`, and `/* ... */` comments (nested).
+  """
   fun apply(): Parser val =>
     recover
       let digit = R('0', '9')
@@ -53,20 +58,40 @@ primitive PegParser
       definition.many1().node(PegGrammar).hide(hidden)
     end
 
+// AST labels for the PEG grammar parser. These are internal labels used by
+// PegParser and PegCompiler to represent the structure of a .peg file's AST.
+
+// A quoted string literal in a PEG grammar.
 primitive PegString is Label fun text(): String => "String"
+// A single-quoted character literal in a PEG grammar.
 primitive PegChar is Label fun text(): String => "Char"
+// The `.` (any character) operator in a PEG grammar.
 primitive PegAny is Label fun text(): String => "Any"
+// A rule name reference in a PEG grammar.
 primitive PegIdent is Label fun text(): String => "Ident"
+// A character range (`'a'..'z'`) in a PEG grammar.
 primitive PegRange is Label fun text(): String => "Range"
+// An optional (`?`) expression in a PEG grammar.
 primitive PegOpt is Label fun text(): String => "Opt"
+// A zero-or-more (`*`) expression in a PEG grammar.
 primitive PegMany is Label fun text(): String => "Many"
+// A one-or-more (`+`) expression in a PEG grammar.
 primitive PegMany1 is Label fun text(): String => "Many1"
+// A separated list (`%`) expression in a PEG grammar.
 primitive PegSep is Label fun text(): String => "Sep"
+// A required separated list (`%+`) expression in a PEG grammar.
 primitive PegSep1 is Label fun text(): String => "Sep1"
+// An and-predicate (`&`) expression in a PEG grammar.
 primitive PegAnd is Label fun text(): String => "And"
+// A not-predicate (`!`) expression in a PEG grammar.
 primitive PegNot is Label fun text(): String => "Not"
+// A skip (`-`) expression in a PEG grammar.
 primitive PegSkip is Label fun text(): String => "Skip"
+// A sequence of expressions in a PEG grammar.
 primitive PegSeq is Label fun text(): String => "Seq"
+// An ordered choice (`/`) expression in a PEG grammar.
 primitive PegChoice is Label fun text(): String => "Choice"
+// A rule definition (`name <- expr`) in a PEG grammar.
 primitive PegDef is Label fun text(): String => "Def"
+// The top-level node containing all rule definitions.
 primitive PegGrammar is Label fun text(): String => "Grammar"
