@@ -1,6 +1,10 @@
+// Short alias for `Literal`.
 type L is Literal
 
 class Literal is Parser
+  """
+  Matches an exact string literal in the source text.
+  """
   let _text: String
 
   new val create(from: String) =>
