@@ -119,7 +119,7 @@ primitive TNull is Label fun text(): String => "Null"
 ## Executable Parser Compiler
 
 An executable example of the parser compiler is found in examples/compiler.
-You can compile the executable by running `make build-examples`.
+You can compile the executable by running `make examples`.
 
 ```console
 Usage:
