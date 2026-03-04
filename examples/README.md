@@ -1,7 +1,7 @@
 # Examples
 
 Each entry demonstrates a different aspect of the peg library. Build all
-examples with `make build-examples`.
+examples with `make examples`.
 
 ## [compiler](compiler/)
 
