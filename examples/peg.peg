@@ -24,7 +24,7 @@ many <- primary -"*"
 many1 <- primary -"+"
 sep <- primary -"%" primary
 sep1 <- primary -"%+" primary
-suffix <- option / many / many1 / sep1 / primary
+suffix <- option / many / many1 / sep1 / sep / primary
 and <- -"&" suffix
 not <- -"!" suffix
 skip <- -"-" suffix
