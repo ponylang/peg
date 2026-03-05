@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Fixed
 
+- Fix unreachable sep rule in self-describing PEG grammar ([PR #59](https://github.com/ponylang/peg/pull/59))
 
 ### Added
 
