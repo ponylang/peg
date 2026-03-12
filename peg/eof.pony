@@ -20,8 +20,6 @@ class EndOfFile is Parser
         (from - offset, this)
       end
     | (let advance: USize, let r: Parser) => (advance, r)
-    else
-      (0, this)
     end
 
   fun error_msg(): String => "end-of-file"

@@ -17,11 +17,11 @@ permissions:
   packages: read
 
 jobs:
-  vs-ponyc-release:
-    name: Test against recent ponyc release
+  vs-ponyc-nightly:
+    name: Test against ponyc nightly
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/ponylang/shared-docker-ci-standard-builder:release
+      image: ghcr.io/ponylang/shared-docker-ci-standard-builder:nightly
     steps:
       - uses: actions/checkout@v6.0.2
       - name: Test
