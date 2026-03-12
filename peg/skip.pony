@@ -16,8 +16,6 @@ class Skip is Parser
     match _a.parse(source, offset, false, hidden)
     | (let advance: USize, let r: ParseOK) => (advance, Skipped)
     | (let advance: USize, let r: Parser) => (advance, r)
-    else
-      (0, this)
     end
 
   fun error_msg(): String => _a.error_msg()

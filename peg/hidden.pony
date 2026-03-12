@@ -19,6 +19,4 @@ class Hidden is Parser
       let from = skip_hidden(source, offset + advance, _hide)
       (from - offset, r)
     | (let advance: USize, let r: Parser) => (advance, r)
-    else
-      (0, this)
     end
