@@ -1,4 +1,4 @@
-primitive JsonParser
+primitive JSONParser
   """
   A JSON parser built from combinators. Supports standard JSON plus `//`, `#`,
   and `/* ... */` comments (nested). The parse tree uses `TObject`, `TPair`,
@@ -46,20 +46,44 @@ primitive JsonParser
       value.hide(hidden)
     end
 
-// AST labels for the JSON parser. Match on these when processing JSON parse
-// results.
+primitive TObject is Label
+  """
+  A JSON object `{...}` containing zero or more `TPair` children.
+  """
+  fun text(): String => "Object"
 
-// A JSON object `{...}` containing zero or more `TPair` children.
-primitive TObject is Label fun text(): String => "Object"
-// A key-value pair in a JSON object: children are `TString` and a value.
-primitive TPair is Label fun text(): String => "Pair"
-// A JSON array `[...]` containing zero or more value children.
-primitive TArray is Label fun text(): String => "Array"
-// A JSON string value (including the surrounding quotes in the token).
-primitive TString is Label fun text(): String => "String"
-// A JSON number value.
-primitive TNumber is Label fun text(): String => "Number"
-// A JSON boolean (`true` or `false`).
-primitive TBool is Label fun text(): String => "Bool"
-// A JSON `null` value.
-primitive TNull is Label fun text(): String => "Null"
+primitive TPair is Label
+  """
+  A key-value pair in a JSON object: children are `TString` and a value.
+  """
+  fun text(): String => "Pair"
+
+primitive TArray is Label
+  """
+  A JSON array `[...]` containing zero or more value children.
+  """
+  fun text(): String => "Array"
+
+primitive TString is Label
+  """
+  A JSON string value (including the surrounding quotes in the token).
+  """
+  fun text(): String => "String"
+
+primitive TNumber is Label
+  """
+  A JSON number value.
+  """
+  fun text(): String => "Number"
+
+primitive TBool is Label
+  """
+  A JSON boolean (`true` or `false`).
+  """
+  fun text(): String => "Bool"
+
+primitive TNull is Label
+  """
+  A JSON `null` value.
+  """
+  fun text(): String => "Null"

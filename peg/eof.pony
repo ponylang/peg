@@ -11,7 +11,7 @@ class EndOfFile is Parser
   fun parse(source: Source, offset: USize, tree: Bool, hidden: Parser)
     : ParseResult
   =>
-    match _a.parse(source, offset, tree, hidden)
+    match \exhaustive\ _a.parse(source, offset, tree, hidden)
     | (let advance: USize, let r: ParseOK) =>
       let from = skip_hidden(source, offset + advance, hidden)
       if from == source.content.size() then

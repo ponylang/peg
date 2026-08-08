@@ -6,8 +6,12 @@ primitive Printer
   as `(label ...)` with children indented below it; tokens are printed as
   `(label text)` on a single line.
   """
-  fun apply(p: ASTChild, depth: USize = 0, indent: String = "  ",
-    s: String ref = String): String ref
+  fun apply(
+    p: ASTChild,
+    depth: USize = 0,
+    indent: String = "  ",
+    s: String ref = String)
+    : String ref
   =>
     """
     Print the parse tree rooted at `p`. Pass a `String ref` as `s` to

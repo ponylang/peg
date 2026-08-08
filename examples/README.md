@@ -9,7 +9,7 @@ A CLI tool that parses files using the library's built-in parsers or a
 custom-compiled grammar. With one argument, it auto-detects whether the
 input is JSON or PEG and prints the parse tree. With two arguments, it
 compiles the first file as a PEG grammar and uses it to parse the second.
-Demonstrates `JsonParser`, `PegParser`, `PegCompiler`, `Source`, `Printer`,
+Demonstrates `JSONParser`, `PegParser`, `PegCompiler`, `Source`, `Printer`,
 and `PegFormatError`. Start here if you're new to the library.
 
 ## [json.peg](json.peg)

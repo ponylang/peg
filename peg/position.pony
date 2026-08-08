@@ -6,7 +6,9 @@ primitive Position
   `PegFormatError` to produce human-readable error locations.
   """
   fun apply(source: Source, offset: USize): (USize, USize) =>
-    """Return the (line, column) for a byte offset in `source`."""
+    """
+    Return the (line, column) for a byte offset in `source`.
+    """
     var cr = false
     var line = USize(1)
     var col = USize(1)
@@ -35,7 +37,9 @@ primitive Position
     (line, col)
 
   fun text(source: Source, offset: USize, col: USize): String =>
-    """Return the source line containing the given offset."""
+    """
+    Return the source line containing the given offset.
+    """
     let start = ((offset - col) + 1).isize()
     let finish =
       try
@@ -46,7 +50,9 @@ primitive Position
     source.content.substring(start, finish)
 
   fun indent(line: String, col: USize): String =>
-    """Build a whitespace string matching the indentation up to `col`."""
+    """
+    Build a whitespace string matching the indentation up to `col`.
+    """
     recover
       let s = String
       try

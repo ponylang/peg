@@ -163,7 +163,7 @@ expr() = group / some_other_rule  // () is sugar for update()
 
 ## Built-in Parsers
 
-- `JsonParser` — a JSON parser built from combinators, with comment support
+- `JSONParser` — a JSON parser built from combinators, with comment support
 - `PegParser` — the parser for `.peg` grammar files (used by `PegCompiler`)
 
 See the `examples/` directory for a CLI tool that demonstrates both.

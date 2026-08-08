@@ -14,7 +14,7 @@ class Hidden is Parser
   fun parse(source: Source, offset: USize, tree: Bool, hidden: Parser)
     : ParseResult
   =>
-    match _a.parse(source, offset, tree, _hide)
+    match \exhaustive\ _a.parse(source, offset, tree, _hide)
     | (let advance: USize, let r: ParseOK) =>
       let from = skip_hidden(source, offset + advance, _hide)
       (from - offset, r)

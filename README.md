@@ -64,7 +64,7 @@ A parser for JSON may also be constructed from combinators at compile time:
 ```pony
 // peg/json.pony
 
-primitive JsonParser
+primitive JSONParser
   fun apply(): Parser val =>
     recover
       let obj = Forward

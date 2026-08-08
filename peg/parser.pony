@@ -34,8 +34,12 @@ trait box Parser
   using operator sugar: `*` for sequence, `/` for ordered choice, `-` for skip,
   and `not` for negation.
   """
-  fun parse(source: Source, offset: USize = 0, tree: Bool = true,
-    hidden: Parser = NoParser): ParseResult
+  fun parse(
+    source: Source,
+    offset: USize = 0,
+    tree: Bool = true,
+    hidden: Parser = NoParser)
+    : ParseResult
     """
     Parse `source` starting at byte `offset`. When `tree` is true, build an AST;
     when false, only track the lexical position. The `hidden` parser defines
@@ -55,8 +59,14 @@ trait box Parser
     """
     offset + hidden.parse(source, offset, false, NoParser)._1
 
-  fun result(source: Source, offset: USize, from: USize, length: USize,
-    tree: Bool, l: Label = NoLabel): ParseResult
+  fun result(
+    source: Source,
+    offset: USize,
+    from: USize,
+    length: USize,
+    tree: Bool,
+    l: Label = NoLabel)
+    : ParseResult
   =>
     """
     Once a terminal parser has an offset and length, it should call `result` to
@@ -69,47 +79,69 @@ trait box Parser
     end
 
   fun mul(that: Parser): Sequence =>
-    """Sequence operator: `a * b` matches a then b."""
+    """
+    Sequence operator: `a * b` matches a then b.
+    """
     Sequence(this, that)
 
   fun div(that: Parser): Choice =>
-    """Ordered choice operator: `a / b` tries a first, then b."""
+    """
+    Ordered choice operator: `a / b` tries a first, then b.
+    """
     Choice(this, that)
 
   fun neg(): Skip =>
-    """Skip operator: `-a` matches a but omits it from the tree."""
+    """
+    Skip operator: `-a` matches a but omits it from the tree.
+    """
     Skip(this)
 
   fun opt(): Option =>
-    """Option: `a.opt()` matches a or succeeds with `NotPresent`."""
+    """
+    Option: `a.opt()` matches a or succeeds with `NotPresent`.
+    """
     Option(this)
 
   fun many(sep: Parser = NoParser): Many =>
-    """Zero or more: `a.many()` or `a.many(sep)` for separated lists."""
+    """
+    Zero or more: `a.many()` or `a.many(sep)` for separated lists.
+    """
     Many(this, sep, false)
 
   fun many1(sep: Parser = NoParser): Many =>
-    """One or more: `a.many1()` or `a.many1(sep)` for separated lists."""
+    """
+    One or more: `a.many1()` or `a.many1(sep)` for separated lists.
+    """
     Many(this, sep, true)
 
   fun op_not(): Not =>
-    """Not predicate: `not a` succeeds if a fails, consuming nothing."""
+    """
+    Not predicate: `not a` succeeds if a fails, consuming nothing.
+    """
     Not(this)
 
   fun op_and(): Not =>
-    """And predicate: succeeds if a matches, consuming nothing."""
+    """
+    And predicate: succeeds if a matches, consuming nothing.
+    """
     Not(Not(this))
 
   fun hide(that: Parser): Hidden =>
-    """Set the hidden channel (whitespace/comments) for this parser."""
+    """
+    Set the hidden channel (whitespace/comments) for this parser.
+    """
     Hidden(this, that)
 
   fun term(l: Label = NoLabel): Terminal =>
-    """Wrap as a terminal that produces a single `Token` leaf."""
+    """
+    Wrap as a terminal that produces a single `Token` leaf.
+    """
     Terminal(this, l)
 
   fun eof(): EndOfFile =>
-    """Require the entire input to be consumed after this parser."""
+    """
+    Require the entire input to be consumed after this parser.
+    """
     EndOfFile(this)
 
 primitive NoParser is Parser
@@ -131,7 +163,16 @@ trait val Label
   labels as primitives implementing this trait to tag your grammar's rules.
   """
   fun text(): String
+    """
+    The label's display text.
+    """
 
 primitive NoLabel is Label
-  """The default empty label, used when no label has been assigned."""
-  fun text(): String => ""
+  """
+  The default empty label, used when no label has been assigned.
+  """
+  fun text(): String =>
+    """
+    Return the empty string.
+    """
+    ""

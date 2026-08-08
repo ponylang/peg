@@ -8,7 +8,7 @@ actor Main
       | 2 =>
         let auth = FileAuth(env.root)
         let filename = env.args(1)?
-        let p = recover val (JsonParser() / PegParser()).eof() end
+        let p = recover val (JSONParser() / PegParser()).eof() end
         peg_run(p, filename, auth, env.out)
       | 3 =>
         peg_compiler(env)
@@ -17,7 +17,8 @@ actor Main
         env.out.print("\n".join(
           [ "Usage:"
             "  " + cmd_name + " <source-file>"
-            "      Run a PEG/JSON parser over some source file and print the AST."
+            "      Run a PEG/JSON parser over some source file and print the"
+            "      AST."
             "  " + cmd_name + " <peg-file> <source-file>"
             "      Compile a parser from the first file, then run it over the "
               + "second file and"

@@ -13,7 +13,7 @@ class Skip is Parser
   fun parse(source: Source, offset: USize, tree: Bool, hidden: Parser)
     : ParseResult
   =>
-    match _a.parse(source, offset, false, hidden)
+    match \exhaustive\ _a.parse(source, offset, false, hidden)
     | (let advance: USize, let r: ParseOK) => (advance, Skipped)
     | (let advance: USize, let r: Parser) => (advance, r)
     end
