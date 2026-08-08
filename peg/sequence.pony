@@ -14,17 +14,24 @@ class Sequence is Parser
     _label = NoLabel
 
   new concat(a: Sequence box, b: Parser) =>
+    """
+    Build a sequence by appending a parser to an existing sequence.
+    """
     let r = a._seq.clone()
     r.push(b)
     _seq = consume r
     _label = a._label
 
   fun label(): Label =>
-    """This sequence's label."""
+    """
+    This sequence's label.
+    """
     _label
 
   fun ref node(value: Label): Sequence =>
-    """Assign a label, creating a named AST node for this sequence."""
+    """
+    Assign a label, creating a named AST node for this sequence.
+    """
     _label = value; this
 
   fun mul(that: Parser): Sequence =>

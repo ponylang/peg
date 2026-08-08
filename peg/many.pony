@@ -19,11 +19,15 @@ class Many is Parser
     _require = require
 
   fun label(): Label =>
-    """This repetition's label."""
+    """
+    This repetition's label.
+    """
     _label
 
   fun ref node(value: Label): Many =>
-    """Assign a label, creating a named AST node for this repetition."""
+    """
+    Assign a label, creating a named AST node for this repetition.
+    """
     _label = value; this
 
   fun parse(source: Source, offset: USize, tree: Bool, hidden: Parser)

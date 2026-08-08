@@ -14,17 +14,25 @@ class val AST
     _label = label'
 
   fun ref push(some: ASTChild) =>
-    """Append a child to this node."""
+    """
+    Append a child to this node.
+    """
     children.push(some)
 
   fun label(): Label =>
-    """This node's label."""
+    """
+    This node's label.
+    """
     _label
 
   fun size(): USize =>
-    """The number of children."""
+    """
+    The number of children.
+    """
     children.size()
 
   fun extract(): ASTChild =>
-    """Return the first child, or `NotPresent` if there are none."""
+    """
+    Return the first child, or `NotPresent` if there are none.
+    """
     try children(0)? else NotPresent end

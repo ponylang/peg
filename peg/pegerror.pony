@@ -9,11 +9,16 @@ trait box PegError
   """
   Base trait for errors produced during parsing or grammar compilation.
   """
-  // Short category name (e.g. "Syntax Error", "Missing Definition").
   fun category(): String
-  // Human-readable explanation of the error.
+    """
+    Short category name (e.g. "Syntax Error", "Missing Definition").
+    """
+
   fun description(): String
-  // Source locations related to this error, with explanatory messages.
+    """
+    Human-readable explanation of the error.
+    """
+
   fun markers(): Iterator[Marker] => Array[Marker].values()
 
 class SyntaxError is PegError
@@ -42,7 +47,9 @@ class SyntaxError is PegError
     [(source, offset, USize(1), "expected " + parser.error_msg())].values()
 
 class val DuplicateDefinition is PegError
-  """A rule name was defined more than once in a PEG grammar."""
+  """
+  A rule name was defined more than once in a PEG grammar.
+  """
   let def: Token
   let prev: Token
 
@@ -58,12 +65,16 @@ class val DuplicateDefinition is PegError
     """
 
   fun markers(): Iterator[Marker] =>
-    [ (def.source, def.offset, def.length, "rule has been defined more than once")
-      (prev.source, prev.offset, prev.length, "previous definition is here")
+    [ (def.source, def.offset, def.length,
+        "rule has been defined more than once")
+      (prev.source, prev.offset, prev.length,
+        "previous definition is here")
     ].values()
 
 class val MissingDefinition is PegError
-  """A rule references another rule that has not been defined."""
+  """
+  A rule references another rule that has not been defined.
+  """
   let token: Token
 
   new val create(token': Token) =>
@@ -81,7 +92,9 @@ class val MissingDefinition is PegError
     ].values()
 
 class val UnknownNodeLabel is PegError
-  """An unrecognized label was encountered in the PEG AST during compilation."""
+  """
+  An unrecognized label was encountered in the PEG AST during compilation.
+  """
   let label: Label
 
   new val create(label': Label) =>
@@ -96,8 +109,12 @@ class val UnknownNodeLabel is PegError
     """
 
 primitive NoStartDefinition is PegError
-  """The grammar has no `start` rule."""
+  """
+  The grammar has no `start` rule.
+  """
+
   fun category(): String => "No Start Rule"
+
   fun description(): String =>
     """
     A parsing expression grammar must have a 'start' rule. This is the initial
@@ -105,8 +122,12 @@ primitive NoStartDefinition is PegError
     """
 
 primitive MalformedAST is PegError
-  """The PEG AST has a structure the compiler does not understand."""
+  """
+  The PEG AST has a structure the compiler does not understand.
+  """
+
   fun category(): String => "Malformed AST"
+
   fun description(): String =>
     """
     There is an internal error that has resulted in an abstract syntax tree
@@ -172,7 +193,9 @@ primitive PegFormatError
     text
 
   fun json(e: PegError val): ByteSeqIter =>
-    """Format an error as a JSON object."""
+    """
+    Format an error as a JSON object.
+    """
     let text =
       recover
         [ "{\n  \"category\": \""

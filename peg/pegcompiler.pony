@@ -195,10 +195,15 @@ primitive PegCompiler
         elseif rune == '\\' then
           escape = true
         elseif hex > 0 then
-          hexrune = (hexrune << 8) or match \exhaustive\ rune
-          | if (rune >= '0') and (rune <= '9') => rune - '0'
-          | if (rune >= 'a') and (rune <= 'f') => (rune - 'a') + 10
-          else (rune - 'A') + 10 end
+          let hex_val =
+            if (rune >= '0') and (rune <= '9') then
+              rune - '0'
+            elseif (rune >= 'a') and (rune <= 'f') then
+              (rune - 'a') + 10
+            else
+              (rune - 'A') + 10
+            end
+          hexrune = (hexrune << 8) or hex_val
           if (hex = hex - 1) == 1 then
             out.push_utf32(hexrune = 0)
           end
@@ -220,5 +225,5 @@ class val PegLabel is Label
 
   new val create(text': String) =>
     _text = text'
-  
+
   fun text(): String => _text
