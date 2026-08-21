@@ -20,8 +20,8 @@ actor Main
             "      Run a PEG/JSON parser over some source file and print the"
             "      AST."
             "  " + cmd_name + " <peg-file> <source-file>"
-            "      Compile a parser from the first file, then run it over the "
-              + "second file and"
+            "      Compile a parser from the first file, then run it " +
+              "over the second file and"
             "      print the AST."
           ].values()))
         env.exitcode(1)
