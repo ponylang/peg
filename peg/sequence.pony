@@ -86,8 +86,8 @@ class Sequence is Parser
 
     for p in _seq.values() do
       match p.parse(source, offset + length, false, NoParser)
-      | (0, NotPresent)
-      | (0, Skipped) => None
+      | (0, NotPresent) => None
+      | (let advance: USize, Skipped) => length = length + advance
       | (let advance: USize, Lex) => length = length + advance
       | (let advance: USize, let r: Parser) => return (length + advance, r)
       else

@@ -19,6 +19,8 @@ class Terminal is Parser
     match _a.parse(source, from, false, NoParser)
     | (let length: USize, Lex) =>
       result(source, offset, from, length, tree, _label)
+    | (let length: USize, Skipped) =>
+      result(source, offset, from, length, tree, _label)
     | (let advance: USize, let r: Parser) => (advance, r)
     else
       (0, this)
