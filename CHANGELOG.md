@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file. This projec
 ### Fixed
 
 - Fix skip inside terminal producing empty tokens ([PR #91](https://github.com/ponylang/peg/pull/91))
+- Fix Many looping forever when inner parser succeeds without advancing ([PR #93](https://github.com/ponylang/peg/pull/93))
 
 ### Added
 
