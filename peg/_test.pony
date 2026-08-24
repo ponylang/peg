@@ -10,6 +10,14 @@ actor \nodoc\ Main is TestList
     test(_TestSkipInSequenceTerminal)
     test(_TestSkipInManyTerminal)
     test(_TestSkipInChoiceTerminal)
+    test(_TestManyNotTerminates)
+    test(_TestManyNotTreeTerminates)
+    test(_TestManyOptTerminates)
+    test(_TestManyOptTreeTerminates)
+    test(_TestMany1NotTerminates)
+    test(_TestMany1NotTreeTerminates)
+    test(_TestMany1OptTerminates)
+    test(_TestMany1OptTreeTerminates)
 
 class \nodoc\ iso _TestFromFile is UnitTest
   let _example: String
@@ -119,4 +127,156 @@ class \nodoc\ iso _TestSkipInChoiceTerminal is UnitTest
       h.assert_eq[String]("[", t.string())
     else
       h.fail("expected a Token result")
+    end
+
+class \nodoc\ iso _TestManyNotTerminates is UnitTest
+  """
+  `Not` inside `Many` returns a zero-advance success when the inner parser
+  fails to match. In token mode, `Many` breaks instead of looping forever.
+  """
+  fun name(): String =>
+    "many with not terminates in token mode"
+
+  fun apply(h: TestHelper) =>
+    let src = Source.from_string("abc", "test")
+    let p: Parser val = recover val L("x").op_not().many() end
+    match recover val p.parse(src, 0, false) end
+    | (let n: USize, Lex) =>
+      h.assert_eq[USize](0, n)
+    else
+      h.fail("expected (0, Lex)")
+    end
+
+class \nodoc\ iso _TestManyNotTreeTerminates is UnitTest
+  """
+  `Not` inside `Many` returns a zero-advance success when the inner parser
+  fails to match. In tree mode, `Many` breaks instead of looping forever.
+  """
+  fun name(): String =>
+    "many with not terminates in tree mode"
+
+  fun apply(h: TestHelper) =>
+    let src = Source.from_string("abc", "test")
+    let p: Parser val = recover val L("x").op_not().many() end
+    match recover val p.parse(src) end
+    | (let n: USize, let a: AST) =>
+      h.assert_eq[USize](0, n)
+      h.assert_eq[USize](0, a.size())
+    else
+      h.fail("expected (0, empty AST)")
+    end
+
+class \nodoc\ iso _TestManyOptTerminates is UnitTest
+  """
+  `Option` inside `Many` returns a zero-advance `NotPresent` when the inner
+  parser fails to match. In token mode, `Many` breaks instead of looping
+  forever.
+  """
+  fun name(): String =>
+    "many with option terminates in token mode"
+
+  fun apply(h: TestHelper) =>
+    let src = Source.from_string("abc", "test")
+    let p: Parser val = recover val L("x").opt().many() end
+    match recover val p.parse(src, 0, false) end
+    | (let n: USize, Lex) =>
+      h.assert_eq[USize](0, n)
+    else
+      h.fail("expected (0, Lex)")
+    end
+
+class \nodoc\ iso _TestManyOptTreeTerminates is UnitTest
+  """
+  `Option` inside `Many` returns a zero-advance `NotPresent` when the inner
+  parser fails to match. In tree mode, `Many` breaks instead of looping
+  forever.
+  """
+  fun name(): String =>
+    "many with option terminates in tree mode"
+
+  fun apply(h: TestHelper) =>
+    let src = Source.from_string("abc", "test")
+    let p: Parser val = recover val L("x").opt().many() end
+    match recover val p.parse(src) end
+    | (let n: USize, let a: AST) =>
+      h.assert_eq[USize](0, n)
+      h.assert_eq[USize](0, a.size())
+    else
+      h.fail("expected (0, empty AST)")
+    end
+
+class \nodoc\ iso _TestMany1NotTerminates is UnitTest
+  """
+  `many1` with a zero-advance `Not` terminates and reports failure. In token
+  mode, the loop breaks on zero advance, then the `_require` check returns a
+  parse error because no elements were consumed.
+  """
+  fun name(): String =>
+    "many1 with not terminates in token mode"
+
+  fun apply(h: TestHelper) =>
+    let src = Source.from_string("abc", "test")
+    let p: Parser val = recover val L("x").op_not().many1() end
+    match recover val p.parse(src, 0, false) end
+    | (let n: USize, let r: Parser) =>
+      h.assert_eq[USize](0, n)
+    else
+      h.fail("expected (0, Parser)")
+    end
+
+class \nodoc\ iso _TestMany1NotTreeTerminates is UnitTest
+  """
+  `many1` with a zero-advance `Not` terminates and reports failure. In tree
+  mode, the loop breaks on zero advance, then the `_require` check returns a
+  parse error because no elements were consumed.
+  """
+  fun name(): String =>
+    "many1 with not terminates in tree mode"
+
+  fun apply(h: TestHelper) =>
+    let src = Source.from_string("abc", "test")
+    let p: Parser val = recover val L("x").op_not().many1() end
+    match recover val p.parse(src) end
+    | (let n: USize, let r: Parser) =>
+      h.assert_eq[USize](0, n)
+    else
+      h.fail("expected (0, Parser)")
+    end
+
+class \nodoc\ iso _TestMany1OptTerminates is UnitTest
+  """
+  `many1` with a zero-advance `Option` terminates and reports failure. In
+  token mode, the loop breaks on zero advance, then the `_require` check
+  returns a parse error because no elements were consumed.
+  """
+  fun name(): String =>
+    "many1 with option terminates in token mode"
+
+  fun apply(h: TestHelper) =>
+    let src = Source.from_string("abc", "test")
+    let p: Parser val = recover val L("x").opt().many1() end
+    match recover val p.parse(src, 0, false) end
+    | (let n: USize, let r: Parser) =>
+      h.assert_eq[USize](0, n)
+    else
+      h.fail("expected (0, Parser)")
+    end
+
+class \nodoc\ iso _TestMany1OptTreeTerminates is UnitTest
+  """
+  `many1` with a zero-advance `Option` terminates and reports failure. In
+  tree mode, the loop breaks on zero advance, then the `_require` check
+  returns a parse error because no elements were consumed.
+  """
+  fun name(): String =>
+    "many1 with option terminates in tree mode"
+
+  fun apply(h: TestHelper) =>
+    let src = Source.from_string("abc", "test")
+    let p: Parser val = recover val L("x").opt().many1() end
+    match recover val p.parse(src) end
+    | (let n: USize, let r: Parser) =>
+      h.assert_eq[USize](0, n)
+    else
+      h.fail("expected (0, Parser)")
     end
