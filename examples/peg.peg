@@ -2,7 +2,7 @@ DIGIT <- '0'..'9'
 HEX <- DIGIT / 'a'..'f' / 'A'..'F'
 ESC <-
   '\\'
-    ('a' / 'b' / 'e' / 'f' / 'n' / 'r' / 't' / 'v' / '\\' / '0'/ '\'' / '\"') /
+    ('a' / 'b' / 'f' / 'n' / 'r' / 't' / 'v' / '\\' / '0'/ '\'' / '\"') /
   "\\x" HEX HEX /
   "\\u" HEX HEX HEX HEX /
   "\\U" HEX HEX HEX HEX HEX HEX
@@ -34,8 +34,8 @@ choice <- sequence %+ "/"
 definition <- ID -"<-" choice
 
 whitespace <- (' ' / '\t' / '\r' / '\n')+
-linecomment <- "//" (!'\r' !'\n' .)*
+linecomment <- ('#' / "//") (!'\r' !'\n' .)*
 nestedcomment <- "/*" ((!"/*" !"*/" .) / nestedcomment)* "*/"
 
 start <- definition+
-hidden <- (whitespace / linecomment / nestedcomment)+
+hidden <- (whitespace / linecomment / nestedcomment)*
