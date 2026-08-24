@@ -47,8 +47,10 @@ class Many is Parser
     while true do
       match _a.parse(source, offset + length, true, hidden)
       | (let advance: USize, Skipped) =>
+        if advance == 0 then break end
         length = length + advance
       | (let advance: USize, let r: ASTChild) =>
+        if advance == 0 then break end
         ast.push(r)
         length = length + advance
       | (let advance: USize, let r: Parser) =>
@@ -87,9 +89,11 @@ class Many is Parser
 
     while true do
       match _a.parse(source, offset + length, false, NoParser)
-      | (0, NotPresent) => None
-      | (let advance: USize, Skipped) => length = length + advance
+      | (let advance: USize, Skipped) =>
+        if advance == 0 then break end
+        length = length + advance
       | (let advance: USize, Lex) =>
+        if advance == 0 then break end
         length = length + advance
       | (let advance: USize, let r: Parser) =>
         if trailing and (advance > 0) then
