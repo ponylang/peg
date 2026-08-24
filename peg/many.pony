@@ -87,8 +87,8 @@ class Many is Parser
 
     while true do
       match _a.parse(source, offset + length, false, NoParser)
-      | (0, NotPresent)
-      | (0, Skipped) => None
+      | (0, NotPresent) => None
+      | (let advance: USize, Skipped) => length = length + advance
       | (let advance: USize, Lex) =>
         length = length + advance
       | (let advance: USize, let r: Parser) =>
