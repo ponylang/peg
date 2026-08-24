@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Fixed
 
+- Fix skip inside terminal producing empty tokens ([PR #91](https://github.com/ponylang/peg/pull/91))
 
 ### Added
 
