@@ -7,9 +7,9 @@ class Hidden is Parser
   let _a: Parser
   let _hide: Parser
 
-  new create(a: Parser, hide: Parser) =>
+  new create(a: Parser, hide': Parser) =>
     _a = a
-    _hide = hide
+    _hide = hide'
 
   fun parse(source: Source, offset: USize, tree: Bool, hidden: Parser)
     : ParseResult
