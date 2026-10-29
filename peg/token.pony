@@ -22,7 +22,7 @@ class val Token
     """
     _label
 
-  fun string(): String iso^ =>
+  fun string(): String =>
     """
     The full matched text.
     """
