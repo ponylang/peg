@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file. This projec
 
 ### Changed
 
+- Update to work with ponyc 0.78.0 ([PR #96](https://github.com/ponylang/peg/pull/96))
 
 ## [0.2.0] - 2026-10-17
 
