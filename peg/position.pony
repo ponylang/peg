@@ -14,7 +14,7 @@ primitive Position
     var col = USize(1)
 
     try
-      for i in Range(0, offset) do
+      for i in Range[USize].till(0, offset) do
         match source.content(i)?
         | '\r' =>
           line = line + 1
@@ -56,7 +56,7 @@ primitive Position
     recover
       let s = String
       try
-        for i in Range(0, col - 1) do
+        for i in Range[USize].till(0, col - 1) do
           if line(i)? == '\t' then
             s.append("\t")
           else

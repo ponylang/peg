@@ -105,14 +105,14 @@ primitive PegCompiler
       | PegChoice =>
         let ast = node as AST
         var p = _compile_expr(errors, defs, ast.children(0)?)
-        for i in Range(1, ast.children.size()) do
+        for i in Range[USize].till(1, ast.children.size()) do
           p = p / _compile_expr(errors, defs, ast.children(i)?)
         end
         p
       | PegSeq =>
         let ast = node as AST
         var p = _compile_expr(errors, defs, ast.children(0)?)
-        for i in Range(1, ast.children.size()) do
+        for i in Range[USize].till(1, ast.children.size()) do
           p = p * _compile_expr(errors, defs, ast.children(i)?)
         end
         p

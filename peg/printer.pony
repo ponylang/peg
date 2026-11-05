@@ -36,6 +36,6 @@ primitive Printer
     s
 
   fun _indent(depth: USize, indent: String, s: String ref) =>
-    for i in Range(0, depth) do
+    for i in Range[USize].till(0, depth) do
       s.append(indent)
     end
