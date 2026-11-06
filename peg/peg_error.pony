@@ -157,7 +157,7 @@ primitive PegFormatError
       let indent = Position.indent(source, col)
       let mark = recover String(m._3) end
 
-      for i in Range(0, m._3) do
+      for i in Range[USize].till(0, m._3) do
         mark.append("^")
       end
 
