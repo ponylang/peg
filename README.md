@@ -6,7 +6,7 @@ Parser Expression Grammar compiler and combinators
 
 - Requires ponyc 0.78.0 or later.
 - Install [corral](https://github.com/ponylang/corral)
-- `corral add github.com/ponylang/peg.git --version 0.2.0`
+- `corral add github.com/ponylang/peg.git --version 0.3.0`
 - `corral fetch` to fetch your dependencies
 - `use "peg"` to include this package
 - `corral run -- ponyc` to compile your application
